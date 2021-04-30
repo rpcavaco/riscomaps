@@ -335,26 +335,29 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 
 InteractionMgr.connected_autocomplete = 'geocode';
 
+var TMPHighLight = {
+	"strokecolor": "#ff4822",
+	"fill": "#ff7b4a40",
+	"linewidth": 2,
+	"shadowcolor": "#000",
+	"shadowoffsetx": 2,
+	"shadowoffsety": 2,
+	"shadowblur": 2	
+};
+var TRANSHighLight = {
+	"strokecolor": "none",
+	"strokecolor": "#8ff",
+	"linewidth": 1,
+	"shadowcolor": "#eee",
+	"shadowoffsetx": 1,
+	"shadowoffsety": 1,
+	"shadowblur": 1		
+};
+		
 InteractionMgr.highlightStyles = {
-	pec_naoalv: {
-		temporary: {
-			"strokecolor": "#ff4822",
-			"fill": "#ff7b4a40",
-			"linewidth": 2,
-			"shadowcolor": "#000",
-			"shadowoffsetx": 2,
-			"shadowoffsety": 2,
-			"shadowblur": 2	
-		},
-		transient: {
-			"strokecolor": "none",
-			"strokecolor": "#8ff",
-			"linewidth": 1,
-			"shadowcolor": "#eee",
-			"shadowoffsetx": 1,
-			"shadowoffsety": 1,
-			"shadowblur": 1		
-		}
+	ALL: {
+		temporary: TMPHighLight,
+		transient: TRANSHighLight
 	}
 };
 
@@ -680,7 +683,10 @@ function legend_viz_toggle(p_this_elem) {
 	const doshow = ! p_this_elem.classList.contains("opened"); 
 	legend_viz(doshow);
 }
-	
+
+
+
+
 function init_ui() {
 
 	// ** CONFIG **

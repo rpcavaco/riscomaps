@@ -217,7 +217,7 @@ var InteractionMgr = {
 					AutocompleteObjMgr.showRecordsArea(p_this.connected_autocomplete, false);
 				}
 				
-				let feat, cod_sig, sty, lyr, oid;
+				let feat, cod_sig, sty, lyr, oid, styles;
 				if (Object.keys(findings).length > 0 && layernames.length > 0) {
 								
 					for (let i=0; i<layernames.length; i++) {
@@ -225,17 +225,31 @@ var InteractionMgr = {
 						lyr = layernames[i];
 						oid = findings[lyr][0];
 						
+						if (oid == null) {
+							continue;
+						}
+						
+						if (p_this.highlightStyles.hasOwnProperty(lyr)) {
+							styles = p_this.highlightStyles[lyr];
+						} else if (p_this.highlightStyles.hasOwnProperty("ALL")) {
+							styles = p_this.highlightStyles["ALL"];
+						} else {
+							console.warn("highlightStyles has no config for layer '"+lyr+"' or ALL.");
+							continue;
+						}
+						
 						if (is_transient) {                  
-							sty = p_this.highlightStyles[lyr].transient;
+							sty = styles.transient;
 						} else {
 							
-							sty = p_this.highlightStyles[lyr].temporary;
+							sty = styles.temporary;
 
 							feat = p_map.getFeature(lyr, oid);
-							cod_sig = feat.attrs.cod_sig;
-							
-							// TODO -- remover HARDCODING
-							QueryMgr.execute("pec_findnaoalv", [cod_sig]);							
+							if (feat) {
+								cod_sig = feat.attrs.cod_sig;							
+								// TODO -- remover HARDCODING
+								QueryMgr.execute("pec_findnaoalv", [cod_sig]);			
+							}
 						}
 						
 						// desenhar já

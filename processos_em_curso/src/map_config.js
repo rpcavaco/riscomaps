@@ -12,7 +12,15 @@ var MAPCFG = {
 	"i18n_text": {
 		"pt": {
 			"LEG": "Legenda",
-			"PEC_NAOALV": "Alvarás de obras em curso"
+			"PEC_NAOLOT": "Alvarás de obras em curso",
+			"PEC_ALV_FMT": ["1 alvará", "{0} alvarás"],
+			"PEC_ALV_GT": "3 alvarás ou mais",
+			"PEC_ENT": "Operações urbanísticas em curso",
+			"PEC_ENT_FMT": ["1 processo", "{0} processos"],
+			"PEC_ENT_GT": "3 processos ou mais",
+			"PEC_LOT": "Alvarás de loteamento em curso",
+			"PEC_SRU": "Alvarás de obras SRU em curso",
+			"PEC_SRU_GT": ["", "{0} alvarás ou mais"],
 		}
 	},
 	"controlssetup": {
@@ -46,22 +54,22 @@ var MAPCFG = {
 		"toollayeractions": {
 			"picker": {			
 				"mousemove": {
-					"pec_naoalv": "InteractionMgr.mousemove"
+					"pec_naolot": "InteractionMgr.mousemove"
 				},
 				"mouseup": {
-					"pec_naoalv": "InteractionMgr.mouseup"
+					"pec_naolot": "InteractionMgr.mouseup"
 				}							
 			}
 		}
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
-	"lnames": ["pec_naoalv", "EV"], //,"NPOLPROJ"],
+	// "lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
+	"lnames": ["pec_naolot", "pec_lot"], //,"NPOLPROJ"],
 	"rasternames": ["IMG16"],
 	"lconfig": {
-		"pec_naoalv": {
+		"pec_naolot": {
 			"name": "Alvarás em curso",
-			"visible": true,
-			"labelkey": "PEC_NAOALV",
+			"labelkey": "PEC_NAOLOT",
 			"condstyle": {
 				"default": {
 					"strokecolor": "#ff5e32ff",  
@@ -75,8 +83,165 @@ var MAPCFG = {
 								return (testval == 1);
 							},
 							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 1,
 								"strokecolor": "#40a3a3",
-								"fill": "#75e4fa80",
+								"fill": COLORRAMPS.RAMPS4X4.ora_green.d,	
+								"fillopacity": 0.7,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval == 2);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 2,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.ora_green.c,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval == 3);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 3,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.ora_green.b,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval > 3);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_GT",
+								"fill": COLORRAMPS.RAMPS4X4.ora_green.a,
+								"linewidth": 1
+							}
+						}
+
+
+					]
+
+				}
+			},						
+			"label": {
+			},
+			"scalelimits": {
+				"top": 30000
+			}
+		},						
+		"pec_entrada": {
+			"name": "Operações em curso",
+			"visible": false,
+			"labelkey": "PEC_ENT",
+			"condstyle": {
+				"default": {
+					"strokecolor": "#ff5e32ff",  
+					"linewidth": 1,	
+					"fill": "rgba(204, 204, 204, 0.5)"
+				},
+				"perattribute": {
+					"cnt": [
+						{
+							"f": function(testval) {
+								return (testval == 1);
+							},
+							"style": {
+								"labelkey": "PEC_ENT_FMT",
+								"labelvalue": 1,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.mag_ora.d,	
+								"fillopacity": 0.7,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval == 2);
+							},
+							"style": {
+								"labelkey": "PEC_ENT_FMT",
+								"labelvalue": 2,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.mag_ora.c,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval == 3);
+							},
+							"style": {
+								"labelkey": "PEC_ENT_FMT",
+								"labelvalue": 3,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.mag_ora.b,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval > 3);
+							},
+							"style": {
+								"labelkey": "PEC_ENT_GT",
+								"fill": COLORRAMPS.RAMPS4X4.mag_ora.a,
+								"linewidth": 1
+							}
+						}
+
+
+					]
+
+				}
+			},						
+			"label": {
+			},
+			"scalelimits": {
+				"top": 30000
+			}
+		},						
+		"pec_lot": {
+			"name": "Alv. loteamento em curso",
+			"visible": true,
+			"labelkey": "PEC_LOT",
+			"condstyle": {
+				"default": {
+					"strokecolor": "#ff5e32ff",  
+					"linewidth": 1,	
+					"fill": "rgba(204, 204, 204, 0.5)"
+				},
+				"perattribute": {
+					"cnt": [
+						{
+							"f": function(testval) {
+								return (testval == 1);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 1,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.blue_mag.d,	
+								"fillopacity": 0.7,
+								"linewidth": 1
+							}
+						},
+						{
+							"f": function(testval) {
+								return (testval > 1);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 2,
+								"strokecolor": "#40a3a3",
+								"fill": COLORRAMPS.RAMPS4X4.blue_mag.a,
 								"linewidth": 1
 							}
 						}
@@ -84,6 +249,46 @@ var MAPCFG = {
 
 				}
 			},						
+			"label": {
+			},
+			"scalelimits": {
+				"top": 30000
+			}
+		},						
+		"pec_sru": {
+			"name": "Alv. SRU em curso",
+			"visible": true,
+			"labelkey": "PEC_SRU",
+			"markerfunction": "sru_markers",	
+			"activationenv": [ -41900.0, 163200.0, -39400.0, 164900.0 ],
+			"condstyle": {
+				"perattribute": {
+					"cnt": [
+						{
+							"f": function(testval) {
+								return (testval == 1);
+							},
+							"style": {
+								"labelkey": "PEC_ALV_FMT",
+								"labelvalue": 1,
+								"tocscale": 15000,
+								"tocattrs": { "cnt": 1 }
+							}	
+						},
+						{
+							"f": function(testval) {
+								return (testval > 1);
+							},
+							"style": {
+								"labelkey": "PEC_SRU_GT",
+								"labelvalue": 2,
+								"tocscale": 15000,
+								"tocattrs": { "cnt": 2 }
+							}	
+						}
+					]
+				}
+			},
 			"label": {
 			},
 			"scalelimits": {
@@ -153,7 +358,7 @@ var MAPCFG = {
 					"baseline": "MIDDLE",
 					"bgstyle": "rgba(255, 255, 255, 0.5)",
 					"scalelimits": {
-						"top": 9900
+						"top": 39900
 					}
 				},
 			},
