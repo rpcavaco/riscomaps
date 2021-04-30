@@ -216,8 +216,8 @@ function generic_mouseup(p_map, x, y, layername, prevcall_state)
 				// TODO - verificar que funciona
 				
 				// marcar centro em cookie
-				setCookie("terrain_center", cen[0] + "_" + cen[1] + "; max-age=259200");
-				setCookie("mapscale", scl + "; max-age=259200");			
+				setCookie("terrain_center", cen[0] + "_" + cen[1] + "; SameSite=Strict; max-age=259200");
+				setCookie("mapscale", scl + "; SameSite=Strict; max-age=259200");			
 			}
 		);
 
