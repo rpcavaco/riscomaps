@@ -210,7 +210,7 @@ var MAPCFG = {
 		},						
 		"pec_lot": {
 			"name": "Alv. loteamento em curso",
-			"visible": true,
+			"visible": false,
 			"labelkey": "PEC_LOT",
 			"condstyle": {
 				"default": {

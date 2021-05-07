@@ -1,0 +1,49 @@
+
+.minimalCtrlsVertical 
+{	
+	z-index: 50;
+	text-align: center;
+	color: black;
+	position: absolute;
+	top: 20px;
+	left: 20px;
+}
+
+.minimalCtrlsVerticalLT
+{	
+	top: 20px;
+	left: 20px;
+}
+
+.minimalCtrlsVerticalRT
+{	
+	top: 20px;
+	right: 20px;
+}
+
+.minimalCtrlsVertical div {
+	width: 28px;
+	height: 34px;
+	font-size: 24px;
+	font-family: verdana, helvetica;
+	line-height: 28px;
+	cursor: pointer;
+	background-color: #fff;
+	border: 1px solid #707070;
+}
+
+.minimalCtrlsVerticalBottom {
+	border-radius: 0 0 5px 5px;
+}
+
+.minimalCtrlsVerticalTop {
+	border-radius: 5px 5px 0 0;
+}
+
+.minimalCtrlsVerticalBottom:hover {
+	background-color: #f2f2f2;
+}
+
+.minimalCtrlsVerticalTop:hover {
+	background-color: #f2f2f2;
+}
