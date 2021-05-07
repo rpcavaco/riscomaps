@@ -64,7 +64,7 @@ var MAPCFG = {
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
 	// "lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
-	"lnames": ["pec_naolot", "pec_lot"], //,"NPOLPROJ"],
+	"lnames": ["pec_naolot", "pec_lot", "pec_sru"], //,"NPOLPROJ"],
 	"rasternames": ["IMG16"],
 	"lconfig": {
 		"pec_naolot": {
@@ -260,7 +260,7 @@ var MAPCFG = {
 			"visible": true,
 			"labelkey": "PEC_SRU",
 			"markerfunction": "sru_markers",	
-			"activationenv": [ -41900.0, 163200.0, -39400.0, 164900.0 ],
+			"aoi": [ -41900.0, 163200.0, -39400.0, 164900.0 ],
 			"condstyle": {
 				"perattribute": {
 					"cnt": [
