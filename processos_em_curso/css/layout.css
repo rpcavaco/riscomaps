@@ -133,6 +133,10 @@ body,
 	cursor: pointer;
 }
 
+.visctrl-label {
+	float: left;
+}
+
 .visctrl-nofeats {
 	color: #909090;
 }
@@ -187,7 +191,7 @@ body,
  /* Position tooltip  */
 .tooltip-left[data-tooltip]:before {
   position: absolute;
-  left: -100%;
+  left: -230px;
   top: 50%;
   background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 24%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22hsla(0, 0%, 20%, 0.9)%22 stroke=%22white%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M 2,2 v 20 h 190 v -14 l 6,-6 z%22 /%3E%3C/svg%3E');
   background-repeat: no-repeat;
@@ -201,6 +205,7 @@ body,
   color: #fff;
   content: attr(data-tooltip);
   text-align: center;
+  font-family: "Regular-Regular";
   font-size: 14px;
   line-height: 1.2;
 }
