@@ -20,12 +20,12 @@ function sizeWidgetsMode() {
 }
 
 //** Config ** inclui config
-class toponimoHighlightAnimator {
-	constructor(p_mapctrl, p_cod_topo, p_marker_coords) {
+function toponimoHighlightAnimator(p_mapctrl, p_cod_topo, p_marker_coords) {
 
 		this.cod_topo = p_cod_topo;
 		this.MAPCTRL = p_mapctrl;
 		this.linewidth = 0;
+		this.finallinewidth = 22;
 		this.maxwidth = 40;
 		this.dir = 'out';
 		this.stepout = 3;
@@ -38,7 +38,7 @@ class toponimoHighlightAnimator {
 				if (p_final) {
 					p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, true, 'temporary',
 						{
-							"strokecolor": "rgba(255,0,0,1)",
+							"strokecolor": "rgba(255,0,0,0.5)",
 							"linecap": "butt",
 							"linewidth": parseInt(p_lw)
 						}, null, false, null, false);
@@ -71,7 +71,7 @@ class toponimoHighlightAnimator {
 					window.requestAnimationFrame(p_obj.draw);
 				} else {
 					// final
-					p_obj.drawInCanvas(4, true);
+					p_obj.drawInCanvas(this.finallinewidth, true);
 
 					// desenhar a cruz do ponto, se for caso disso
 					if (p_obj.marker_coords) {
@@ -83,7 +83,6 @@ class toponimoHighlightAnimator {
 		})(this);
 
 		window.requestAnimationFrame(this.draw);
-	}
 } 
 
 
@@ -335,20 +334,26 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 
 	selAddress(p_codtopo, p_ext, p_loc) {
 
-		let env = new Envelope2D(), ret = false;
 
-		if (p_ext) {
-			env.setMinsMaxs(p_ext[0], p_ext[1], p_ext[2], p_ext[3]);
-			env.expand(1.2);
-			this.zoomToToponimo(env, p_codtopo);
-			ret = true;
-		} else if (p_loc && p_loc.length > 0) {
-			env.setAround(p_loc, this.zoom_radius);		
-			this.zoomToToponimo(env, p_codtopo);
-			ret = true;
+	
+		var alllow_saving = true;
+		/*
+		if (!p_onhover) {
+			showRetValues(null, alllow_saving);
 		}
-
-		return ret;
+		* */
+		
+		var highlightIsFinal = true;
+		if (p_onhover) {
+			highlightIsFinal = false;
+		}
+		
+		highlighting(
+					p_codtopo,
+					p_npol,
+					p_loc,
+					highlightIsFinal
+				);	
 	}
 }
 

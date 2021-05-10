@@ -634,10 +634,10 @@ class LocAutoCompleter extends AutoCompleter {
 					sel_toponimo(p_rec.cont, p_rec.cod_topo, "", env.getArray(), loc, false);
 					*/
 					
-					this.selToponym(p_rec.cod_topo, p_rec.env, p_loc)
+					this.selToponym(p_rec.cod_topo, p_rec.env, loc)
 				} else {
 					//sel_toponimo(p_rec.cont, p_rec.cod_topo, "", null, loc, false);
-					this.selToponym(p_rec.cod_topo, null, p_loc)
+					this.selToponym(p_rec.cod_topo, null, loc)
 				}
 				this.showRecordsArea(false);
 			}
