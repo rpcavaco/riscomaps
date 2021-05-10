@@ -565,6 +565,10 @@ class LocAutoCompleter extends AutoCompleter {
 				}
 				
 			} else {
+
+				console.log(cont);
+
+
 				recs.push({
 						'cod_topo': ot.cod_topo,
 						'toponimo': ot.toponym,
@@ -577,9 +581,7 @@ class LocAutoCompleter extends AutoCompleter {
 						
 				//copyToClipboard(ot.cod_topo + ' ' + ot.toponym + ' ' +ot.npol);
 
-				//if (recs.length > 1) {
-					this.setCurrentRecords(recs, false);	
-				//}
+				this.setCurrentRecords(recs, false);	
 				
 				let cod_topo = ot.cod_topo;
 				// o toponimo 'oficial' assoicado a este número é outro ...
@@ -592,7 +594,11 @@ class LocAutoCompleter extends AutoCompleter {
 				QueriesMgr.executeQuery("numPol", [cod_topo, ot.npol], false);
 				*/
 
-				sel_num(cod_topo, ot.toponym, ot.npol, ot.npoldata.areaespecial, ot.npoldata.freguesia, ot.npoldata.cod_freg, false, ot.loc, true);
+				console.log(ot);
+
+				//this.selAddress(ot.cod_topo, ot.ext, ot.loc);
+
+				//sel_num(cod_topo, ot.toponym, ot.npol, ot.npoldata.areaespecial, ot.npoldata.freguesia, ot.npoldata.cod_freg, false, ot.loc, true);
 			}
 		}		
 	}	

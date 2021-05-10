@@ -20,69 +20,70 @@ function sizeWidgetsMode() {
 }
 
 //** Config ** inclui config
-function toponimoHighlightAnimator(p_mapctrl, p_cod_topo, p_marker_coords) {
-	
-	this.cod_topo = p_cod_topo;
-	this.MAPCTRL = p_mapctrl;
-	this.linewidth = 0;
-	this.maxwidth = 40;
-	this.dir = 'out';
-	this.stepout = 3;
-	this.stepin = 3;
-	this.marker_coords = p_marker_coords;
-						
-	(function(p_obj) {
-		p_obj.drawInCanvas = function(p_lw, p_final) {
-			p_obj.MAPCTRL.clearTemporary();
-			if (p_final) {
-				p_obj.MAPCTRL.drawFromIndex('EV','TOPO_IX', p_obj.cod_topo, true, 'temporary',
-						 {
+class toponimoHighlightAnimator {
+	constructor(p_mapctrl, p_cod_topo, p_marker_coords) {
+
+		this.cod_topo = p_cod_topo;
+		this.MAPCTRL = p_mapctrl;
+		this.linewidth = 0;
+		this.maxwidth = 40;
+		this.dir = 'out';
+		this.stepout = 3;
+		this.stepin = 3;
+		this.marker_coords = p_marker_coords;
+
+		(function (p_obj) {
+			p_obj.drawInCanvas = function (p_lw, p_final) {
+				p_obj.MAPCTRL.clearTemporary();
+				if (p_final) {
+					p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, true, 'temporary',
+						{
 							"strokecolor": "rgba(255,0,0,1)",
 							"linecap": "butt",
 							"linewidth": parseInt(p_lw)
-							}, null, false, null, false);
-			} else {
-				p_obj.MAPCTRL.drawFromIndex('EV','TOPO_IX', p_obj.cod_topo, true, 'temporary',
+						}, null, false, null, false);
+				} else {
+					p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, true, 'temporary',
 						{
 							"strokecolor": "rgba(255,0,0,0.4)",
 							"linecap": "butt",
 							"linewidth": parseInt(p_lw)
-							}, null, false, null, false);
-			}
-		};
-	})(this);
-	
-	(function(p_obj) {
-		p_obj.draw = function() {
-
-			var realsrchtol, scrrad;
-			
-			p_obj.drawInCanvas(p_obj.linewidth);
-			if (p_obj.dir == 'out') 
-			{
-				p_obj.linewidth += p_obj.stepout;		
-				if (p_obj.linewidth >= p_obj.maxwidth) {
-					p_obj.dir = 'in';
+						}, null, false, null, false);
 				}
-			} else {
-				p_obj.linewidth -= p_obj.stepin;			
-			}
-			if (p_obj.dir == 'out' || p_obj.linewidth > 2) {
-				window.requestAnimationFrame(p_obj.draw);
-			} else {
-				// final
-				p_obj.drawInCanvas(4, true);
+			};
+		})(this);
 
-				// desenhar a cruz do ponto, se for caso disso
-				/*if (p_obj.marker_coords) {
-					drawPickMarker(MAPCTRL, PREVLOCJSONTREE, p_obj.marker_coords);
-				}*/
-			}
-		
-		}
-	})(this);
-	
-	window.requestAnimationFrame(this.draw);
+		(function (p_obj) {
+			p_obj.draw = function () {
+
+				var realsrchtol, scrrad;
+
+				p_obj.drawInCanvas(p_obj.linewidth);
+				if (p_obj.dir == 'out') {
+					p_obj.linewidth += p_obj.stepout;
+					if (p_obj.linewidth >= p_obj.maxwidth) {
+						p_obj.dir = 'in';
+					}
+				} else {
+					p_obj.linewidth -= p_obj.stepin;
+				}
+				if (p_obj.dir == 'out' || p_obj.linewidth > 2) {
+					window.requestAnimationFrame(p_obj.draw);
+				} else {
+					// final
+					p_obj.drawInCanvas(4, true);
+
+					// desenhar a cruz do ponto, se for caso disso
+					if (p_obj.marker_coords) {
+						drawPickMarker(MAPCTRL, PREVLOCJSONTREE, p_obj.marker_coords);
+					}
+				}
+
+			};
+		})(this);
+
+		window.requestAnimationFrame(this.draw);
+	}
 } 
 
 
@@ -315,6 +316,24 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 	}
 
 	selToponym(p_codtopo, p_ext, p_loc) {
+
+		let env = new Envelope2D(), ret = false;
+
+		if (p_ext) {
+			env.setMinsMaxs(p_ext[0], p_ext[1], p_ext[2], p_ext[3]);
+			env.expand(1.2);
+			this.zoomToToponimo(env, p_codtopo);
+			ret = true;
+		} else if (p_loc && p_loc.length > 0) {
+			env.setAround(p_loc, this.zoom_radius);		
+			this.zoomToToponimo(env, p_codtopo);
+			ret = true;
+		}
+
+		return ret;
+	}
+
+	selAddress(p_codtopo, p_ext, p_loc) {
 
 		let env = new Envelope2D(), ret = false;
 

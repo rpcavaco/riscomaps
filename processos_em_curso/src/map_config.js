@@ -64,8 +64,8 @@ var MAPCFG = {
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
 	// "lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
-	"lnames": ["pec_naolot", "pec_lot", "pec_sru"], //,"NPOLPROJ"],
-	"rasternames": ["IMG16"],
+	"lnames": ["pec_naolot", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
+	"rasternames": [],
 	"lconfig": {
 		"pec_naolot": {
 			"name": "Alvarás em curso",
@@ -353,7 +353,8 @@ var MAPCFG = {
 				"attrib": "toponimo",
 				"style": {
 					"font": "16px Arial",
-					"fill": "#606060",
+					"fill": "#3A3A3A",
+					"stroke": "#3A3A3A", 
 					"placementtype": "ALONG",
 					"baseline": "MIDDLE",
 					"bgstyle": "rgba(255, 255, 255, 0.5)",
