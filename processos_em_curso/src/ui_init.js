@@ -1,4 +1,6 @@
 
+// ATENÇÃO - Este ficheiro inclui UI configs onde indicado com ** Config ** inclui config
+
 function sizeWidgetsMode() {
 	
 	let ret, winsize = {
@@ -20,9 +22,14 @@ function sizeWidgetsMode() {
 }
 
 //** Config ** inclui config
-function toponimoHighlightAnimator(p_mapctrl, p_cod_topo, p_marker_coords) {
+// ============================================================================
+// Display dos resultados da pesquisa de endereço
+// ----------------------------------------------------------------------------
+
+function addrHighlightAnimator(p_mapctrl, p_cod_topo, p_npol, p_marker_coords) {
 
 		this.cod_topo = p_cod_topo;
+		this.npol = p_npol;
 		this.MAPCTRL = p_mapctrl;
 		this.linewidth = 0;
 		this.finallinewidth = 22;
@@ -31,25 +38,102 @@ function toponimoHighlightAnimator(p_mapctrl, p_cod_topo, p_marker_coords) {
 		this.stepout = 3;
 		this.stepin = 3;
 		this.marker_coords = p_marker_coords;
+		this.strk_guide = "#FF3C35";
+		this.strk_cline = "rgba(255,0,0,0.5)";
+		this.strk_cline_trans = "rgba(255,0,0,0.4)";
 
 		(function (p_obj) {
 			p_obj.drawInCanvas = function (p_lw, p_final) {
 				p_obj.MAPCTRL.clearTemporary();
+				let symb;
 				if (p_final) {
-					p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, true, 'temporary',
-						{
-							"strokecolor": "rgba(255,0,0,0.5)",
+					symb = {
+							"strokecolor": this.strk_cline,
 							"linecap": "butt",
 							"linewidth": parseInt(p_lw)
-						}, null, false, null, false);
+						};
 				} else {
-					p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, true, 'temporary',
-						{
-							"strokecolor": "rgba(255,0,0,0.4)",
+					symb = {
+							"strokecolor": this.strk_cline_trans,
 							"linecap": "butt",
 							"linewidth": parseInt(p_lw)
-						}, null, false, null, false);
+						};
 				}
+
+				const inscreenspace = true;
+				const dlayer = 'temporary';
+				const do_debug = false;
+	
+				// Desenho do eixo de via
+				p_obj.MAPCTRL.drawFromIndex('EV', 'TOPO_IX', p_obj.cod_topo, inscreenspace, dlayer,
+					symb, null, false, null, do_debug);
+
+				if (p_final) {
+
+					let npidx = p_obj.MAPCTRL.getGlobalIndex("NP_IX");
+					npprojs_fromtopo = npidx[p_obj.cod_topo];
+
+					if (npprojs_fromtopo) {
+						npproj = npprojs_fromtopo[p_obj.npol];
+						if (npproj!==undefined && npproj['oid']!==undefined &&  npproj['oid'].length > 0) {
+
+							const angle_ret=[], anchor=[];
+							// Desenho da linha de projeção do num.polícia sobre o eixo de via
+							let npprojfeat = p_obj.MAPCTRL.drawSingleFeature('NPOLPROJ', npproj['oid'], inscreenspace, dlayer,  
+											{										
+												"strokecolor": strk_guide,
+												"linewidth": 4,
+												"shadowcolor": "#444",
+												"shadowoffsetx": 2,
+												"shadowoffsety": 2,
+												"shadowblur": 2
+											}, false, null, do_debug);
+
+							// Desenho do número de polícia SALIENTE
+							if (npprojfeat != null) {
+								geom.twoPointAngle(
+										[npprojfeat.points[0], npprojfeat.points[1]], 
+										[npprojfeat.points[2], npprojfeat.points[3]],
+										angle_ret
+								);
+				
+								let gc = p_obj.MAPCTRL.getGraphicController();
+								if (gc) {
+				
+									gc.saveCtx(dlayer);
+									
+									gc.setFillStyle(strk_guide, dlayer);
+									gc.setStrokeStyle(strk_guide, dlayer);
+									gc.setFont('24px Arial', dlayer);
+									
+									if (angle_ret[1]==2 || angle_ret[1]==3) {
+										gc.setTextAlign('left', dlayer);						
+										geom.applyPolarShiftTo([npprojfeat.points[0], npprojfeat.points[1]], angle_ret[0], 6, anchor);
+									} else {
+										gc.setTextAlign('right', dlayer);
+										geom.applyPolarShiftTo([npprojfeat.points[0], npprojfeat.points[1]], angle_ret[0], -6, anchor);
+									}
+									gc.setBaseline('middle', dlayer);
+				
+									gc.setShadowColor('#333', dlayer);
+									gc.setShadowOffsetX(3, dlayer);
+									gc.setShadowOffsetY(3, dlayer);
+									gc.setShadowBlur(1, dlayer);
+									
+									gc.rotatedText(this.npol, anchor, angle_ret[0], 
+									{
+										"fill": true,
+										"stroke": true
+									},
+									dlayer);				
+									gc.restoreCtx(dlayer);
+								}
+							}
+						}
+
+					}	
+				}			
+
 			};
 		})(this);
 
@@ -86,10 +170,12 @@ function toponimoHighlightAnimator(p_mapctrl, p_cod_topo, p_marker_coords) {
 } 
 
 
+//** Config ** inclui config
 // ============================================================================
 // Extend / customize managers
 // ----------------------------------------------------------------------------
 
+// Customização comportamento caixa de vista de registos alfa
 RecordsViewMgr.show = function(p_key, p_records) {
 	
 	if (p_key == "main") {
@@ -113,6 +199,7 @@ RecordsViewMgr.show = function(p_key, p_records) {
 	RecordsViewMgr.generatePanels(p_key, p_records, "queryResults");	
 };
 
+// Customização pesquisas especializadas
 QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) {
 	let rows;
 	switch(p_qrykey) {
@@ -126,14 +213,211 @@ QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) 
 	}
 };
 
+// Nome do 'autocomplete relacionado' para que as interações rato / toque com o mapa limpem a 
+//   a respetiva 'records area' de resultados
+InteractionMgr.connected_autocomplete = 'geocode';
+
+var TMPHighLight = {
+	"strokecolor": "#ff4822",
+	"fill": "#ff7b4a40",
+	"linewidth": 2,
+	"shadowcolor": "#000",
+	"shadowoffsetx": 2,
+	"shadowoffsety": 2,
+	"shadowblur": 2	
+};
+var TRANSHighLight = {
+	"strokecolor": "#8ff",
+	"linewidth": 1,
+	"shadowcolor": "#eee",
+	"shadowoffsetx": 1,
+	"shadowoffsety": 1,
+	"shadowblur": 1		
+};
+	
+// Estilos de 'highlighting' de features ao movimentar o rato ('hover') sobre estas
+InteractionMgr.highlightStyles = {
+	ALL: {
+		temporary: TMPHighLight,
+		transient: TRANSHighLight
+	}
+};
+
+// Registo de ações a exceutar previamente ao processamento de qualquer 'mouseup'
+InteractionMgr.onBeforeMouseUp = function(p_map, p_x, p_y, p_layernames, p_findings) {
+	RecordsViewMgr.clear("main");
+}
+
+// ----------------------------------------------------------------------------
+// Final "extend / customize managers"
+// ============================================================================
+
+
+
+// ============================================================================
+// Integração Autocomplete Localizador
+// ----------------------------------------------------------------------------
+
+//** Config ** inclui config
+class Geocode_LocAutoCompleter extends LocAutoCompleter {
+	constructor(
+			p_url,
+			p_srid,
+			p_widgets
+		) {
+		super("geocode", p_url,
+			{
+				outsrid: p_srid
+			}
+			, p_widgets);
+		this.mapctrl = null;
+		this.zoom_radius = 1.0;
+	}
+	
+	setMap(p_mapctrl) {
+		this.mapctrl = p_mapctrl;
+	}
+
+	setZoomRadius(p_zoom_radius) {
+		this.zoom_radius = p_zoom_radius;
+	}
+
+	beforeResponseDone(p_respobj) {
+		hideLoaderImg();
+	}	
+
+	beforeExecSearch() {
+		showLoaderImg();	
+	}	
+	
+	// Sem widgets de publicação resultados Localizador
+	/*clearPublishingWidgets() {
+
+	}*/
+
+	deleteHandler() {
+
+		this.cleanSearch();
+
+		if (typeof QueriesMgr != 'undefined') {
+			QueriesMgr.clearResults();
+		}
+
+		// TODO -- avaliar a necessidade de manter este vindo da app AGS
+		/*
+		if (typeof LayerInteractionMgr != 'undefined') {
+			LayerInteractionMgr.clearFunc();
+		}
+		*/
+
+        //NPolHighlighter.clear();
+        //NPolHighlighter.clearMarked();
+       
+        if (MapsMgr) {
+			// em todos os mapas
+			let the_map;
+			for (let k in MapsMgr.maps) {
+				the_map = MapsMgr.get(k);
+				the_map.unregisterOnDrawFinish("highlighttopo");
+				the_map.clearTransient();
+				the_map.clearTemporary();
+			}
+        }
+	}
+
+//** Config ** inclui config
+	altQueriesHandler(p_trimmed_qrystr) {
+	
+		const notTopoRegEx = new RegExp("(nud|nup|p|alv|\\d+)\/", 'i');
+		const nupRegEx = new RegExp("^(nud|nup|p)\/\\d{3,8}\/\\d{2,4}", 'i');
+		const alvCMPEx = new RegExp("^alv\/\\d{1,8}\/\\d{2,4}\/(dmu|cmp)", 'i');
+		const alvSRUEx = new RegExp("^\\d{3,8}\/\\d{2,4}\/sru", 'i');
+		if (notTopoRegEx.test(p_trimmed_qrystr)) {
+			this.emptyCurrentRecords();
+			if (nupRegEx.test(p_trimmed_qrystr)) {
+				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
+			}
+			if (alvCMPEx.test(p_trimmed_qrystr)) {
+				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
+			}
+			if (alvSRUEx.test(p_trimmed_qrystr)) {
+				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
+			}
+			return false;
+			
+		}
+		return true;		
+	}
+
+	zoomToAddr(p_env, hl_codtopo, hl_npol, marker_coords) {
+		//console.trace();
+
+		(function(p_mapctrl, p_hl_codtopo, p_hl_npol, p_marker_coords) {
+			if (p_hl_codtopo) {
+				p_mapctrl.registerOnDrawFinish("highlighttopo",
+					function (the_mctrl, p_item)
+					{
+						if (p_item != 'normal') {
+							return;
+						}
+						addrHighlightAnimator(the_mctrl, p_hl_codtopo, p_hl_npol, p_marker_coords);
+					},
+					false // opt_noclobber
+				);
+			}
+		})(this.mapctrl, hl_codtopo, hl_npol, marker_coords);
+
+		const envArray = p_env.getArray();
+		this.mapctrl.refreshFromMinMax(envArray[0], envArray[1], envArray[2], envArray[3]); //, new LayerFilter("EV","cod_topo",hl_codtopo, true));
+	}
+
+	selAddress(p_codtopo, p_npol, p_ext, opt_p_loc) {
+
+		let env = new Envelope2D(), ret = false;
+
+		if (p_ext) {
+			env.setMinsMaxs(p_ext[0], p_ext[1], p_ext[2], p_ext[3]);
+			env.expand(1.2);
+			this.zoomToAddr(env, p_codtopo, p_npol);
+			ret = true;
+		} else if (opt_p_loc && opt_p_loc.length > 0) {
+			env.setAround(opt_p_loc, this.zoom_radius);		
+			this.zoomToAddr(env, p_codtopo, p_npol);
+			ret = true;
+		}
+
+		return ret;
+	}
+
+}
+
+// ----------------------------------------------------------------------------
+// Final da integração Autocomplete Localizador
+// ============================================================================
+
+
+
+// ============================================================================
+// Utilidades User interface
+//	 1. Mostrar / esconder "wait gif" - 'showLoaderImg' e 'hideLoaderImg'
+//	 2. Adaptação UI a diferentes display / "responsividade" -- 'sizeWidgets'
+//   3. Animação inicial
+//   4. Controlador de mensagens de diálogo com o utilizador
+//   5. Controles de toggling para "encolher":
+//       a) a legenda -- 'legend_viz' e 'legend_viz_toggle'
+// ----------------------------------------------------------------------------
+
+// NÃO ALTERAR ESTE NOME- É PADRÃO REFERENCIADO EM RISCOJS
 function showLoaderImg() {
 	document.getElementById("loading").style.display = "block";
 }
 
+// NÃO ALTERAR ESTE NOME- É PADRÃO REFERENCIADO EM RISCOJS
 function hideLoaderImg() {
 	document.getElementById("loading").style.display = "none";	
 }
 
+//** Config ** inclui config
 function sizeWidgets() {
 	
 	let mode = sizeWidgetsMode();
@@ -203,197 +487,7 @@ function sizeWidgets() {
 	}	
 }
 
-class Geocode_LocAutoCompleter extends LocAutoCompleter {
-	constructor(
-			p_url,
-			p_srid,
-			p_widgets
-		) {
-		super("geocode", p_url,
-			{
-				outsrid: p_srid
-			}
-			, p_widgets);
-		this.mapctrl = null;
-		this.zoom_radius = 1.0;
-	}
-	
-	setMap(p_mapctrl) {
-		this.mapctrl = p_mapctrl;
-	}
-
-	setZoomRadius(p_zoom_radius) {
-		this.zoom_radius = p_zoom_radius;
-	}
-
-	beforeResponseDone(p_respobj) {
-		hideLoaderImg();
-	}	
-
-	beforeExecSearch() {
-		showLoaderImg();	
-	}	
-	
-	// Sem widgets de publicação resultados Localizador
-	/*clearPublishingWidgets() {
-
-	}*/
-
-	deleteHandler() {
-
-		this.cleanSearch();
-
-		if (typeof QueriesMgr != 'undefined') {
-			QueriesMgr.clearResults();
-		}
-
-		// TODO -- avaliar a necessidade de manter este vindo da app AGS
-		/*
-		if (typeof LayerInteractionMgr != 'undefined') {
-			LayerInteractionMgr.clearFunc();
-		}
-		*/
-
-        //NPolHighlighter.clear();
-        //NPolHighlighter.clearMarked();
-       
-        if (MapsMgr) {
-			// em todos os mapas
-			let the_map;
-			for (let k in MapsMgr.maps) {
-				the_map = MapsMgr.get(k);
-				the_map.unregisterOnDrawFinish("highlighttopo");
-				the_map.clearTransient();
-				the_map.clearTemporary();
-			}
-        }
-	}
-
-	altQueriesHandler(p_trimmed_qrystr) {
-	
-		const notTopoRegEx = new RegExp("(nud|nup|p|alv|\\d+)\/", 'i');
-		const nupRegEx = new RegExp("^(nud|nup|p)\/\\d{3,8}\/\\d{2,4}", 'i');
-		const alvCMPEx = new RegExp("^alv\/\\d{1,8}\/\\d{2,4}\/(dmu|cmp)", 'i');
-		const alvSRUEx = new RegExp("^\\d{3,8}\/\\d{2,4}\/sru", 'i');
-		if (notTopoRegEx.test(p_trimmed_qrystr)) {
-			this.emptyCurrentRecords();
-			if (nupRegEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
-			}
-			if (alvCMPEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
-			}
-			if (alvSRUEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
-			}
-			return false;
-			
-		}
-		return true;		
-	}
-
-	zoomToToponimo(p_env, hl_codtopo, marker_coords) {
-		//console.trace();
-
-		(function(p_mapctrl, p_hl_codtopo, p_marker_coords) {
-			if (p_hl_codtopo) {
-				p_mapctrl.registerOnDrawFinish("highlighttopo",
-					function (the_mctrl, p_item)
-					{
-						if (p_item != 'normal') {
-							return;
-						}
-						toponimoHighlightAnimator(the_mctrl, p_hl_codtopo, p_marker_coords);
-					},
-					false // opt_noclobber
-				);
-			}
-		})(this.mapctrl, hl_codtopo, marker_coords);
-
-		const envArray = p_env.getArray();
-		this.mapctrl.refreshFromMinMax(envArray[0], envArray[1], envArray[2], envArray[3]); //, new LayerFilter("EV","cod_topo",hl_codtopo, true));
-	}
-
-	selToponym(p_codtopo, p_ext, p_loc) {
-
-		let env = new Envelope2D(), ret = false;
-
-		if (p_ext) {
-			env.setMinsMaxs(p_ext[0], p_ext[1], p_ext[2], p_ext[3]);
-			env.expand(1.2);
-			this.zoomToToponimo(env, p_codtopo);
-			ret = true;
-		} else if (p_loc && p_loc.length > 0) {
-			env.setAround(p_loc, this.zoom_radius);		
-			this.zoomToToponimo(env, p_codtopo);
-			ret = true;
-		}
-
-		return ret;
-	}
-
-	selAddress(p_codtopo, p_ext, p_loc) {
-
-
-	
-		var alllow_saving = true;
-		/*
-		if (!p_onhover) {
-			showRetValues(null, alllow_saving);
-		}
-		* */
-		
-		var highlightIsFinal = true;
-		if (p_onhover) {
-			highlightIsFinal = false;
-		}
-		
-		highlighting(
-					p_codtopo,
-					p_npol,
-					p_loc,
-					highlightIsFinal
-				);	
-	}
-}
-
-InteractionMgr.connected_autocomplete = 'geocode';
-
-var TMPHighLight = {
-	"strokecolor": "#ff4822",
-	"fill": "#ff7b4a40",
-	"linewidth": 2,
-	"shadowcolor": "#000",
-	"shadowoffsetx": 2,
-	"shadowoffsety": 2,
-	"shadowblur": 2	
-};
-var TRANSHighLight = {
-	"strokecolor": "none",
-	"strokecolor": "#8ff",
-	"linewidth": 1,
-	"shadowcolor": "#eee",
-	"shadowoffsetx": 1,
-	"shadowoffsety": 1,
-	"shadowblur": 1		
-};
-		
-InteractionMgr.highlightStyles = {
-	ALL: {
-		temporary: TMPHighLight,
-		transient: TRANSHighLight
-	}
-};
-
-InteractionMgr.onBeforeMouseUp = function(p_map, p_x, p_y, p_layernames, p_findings) {
-	RecordsViewMgr.clear("main");
-}
-
-
-// ----------------------------------------------------------------------------
-// END Extend / customize managers
-// ============================================================================
-
+//** Config ** inclui config
 function initialAnimation () {
 	
 	this.winsize = {
@@ -587,6 +681,7 @@ function initialAnimation () {
 	
 }
 
+//** Config ** inclui config
 var MessagesController = {
 	
 	// Constantes
@@ -708,8 +803,15 @@ function legend_viz_toggle(p_this_elem) {
 	legend_viz(doshow);
 }
 
+// ----------------------------------------------------------------------------
+// Final Utilidades User interface
+// ============================================================================
 
 
+
+// ============================================================================
+// INIT User interface
+// ----------------------------------------------------------------------------
 
 function init_ui() {
 

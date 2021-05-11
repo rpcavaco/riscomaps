@@ -64,7 +64,7 @@ var MAPCFG = {
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
 	// "lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
-	"lnames": ["pec_naolot", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
+	"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
 	"rasternames": [],
 	"lconfig": {
 		"pec_naolot": {
@@ -305,22 +305,22 @@ var MAPCFG = {
 			"label": {
 				"attrib": "n_policia",
 				"style": {
-					"font": "12px Helvetica",
+					"font": "14px Helvetica",
 					"stroke": "#fff",
 					"fill": "#fff",
 					"baseline": "MIDDLE",
 					"placementtype": "LEADER",
 					"leader_arrowfillcolor": "#d1d5ff",
 					"leader_textfillcolor": "#fff",
-					"leader_textstrokecolor": "#000",
+					"leader_textstrokecolor": "#fff",
 					"leader_textlinewidth": 0.3,
-					"leader_arrowmaxscale": 1200,
-					"backgroundependent": {
+					"leader_arrowmaxscale": 1200
+					/*"backgroundependent": {
 						"CART98": {
 							"leader_textfillcolor": "#000",
 							"leader_arrowfillcolor": "#2a348c"
 						}
-					}
+					} */
 				}
 			},							
 			"scalelimits": {
