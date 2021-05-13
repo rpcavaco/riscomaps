@@ -220,7 +220,7 @@ var InteractionMgr = {
 					AutocompleteObjMgr.showRecordsArea(p_this.connected_autocomplete, false);
 				}
 				
-				let feat, cod_sig, sty, lyr, oid, styles, qrykey, markerf;
+				let feat, cod_sig, sty, lyr, oid, styles, qrykey;
 				if (Object.keys(findings).length > 0 && layernames.length > 0) {
 								
 					for (let i=0; i<layernames.length; i++) {
@@ -228,9 +228,17 @@ var InteractionMgr = {
 						lyr = layernames[i];
 						qrykey = lyr + "_info";
 						oid = findings[lyr][0];
-						
 						if (oid == null) {
 							continue;
+						}
+
+						feat = p_map.getFeature(lyr, oid);
+						if (feat) {
+							if (feat._styidx !== undefined) {
+								if (!p_map.style_visibility.isLyrTOCStyleVisibile(feat._styidx)) {
+									continue;
+								}
+							}
 						}
 						
 						if (p_this.highlightStyles.hasOwnProperty(lyr)) {
@@ -244,10 +252,8 @@ var InteractionMgr = {
 						
 						if (is_transient) {                  
 							sty = styles.transient;
-						} else {
-							
+						} else {							
 							sty = styles.temporary;
-
 							feat = p_map.getFeature(lyr, oid);
 							if (feat) {
 								cod_sig = feat.attrs.cod_sig;							

@@ -856,13 +856,13 @@ function init_ui() {
 			MessagesController.setMessage(HELP_MSG, false);
 		}
 	);
-		
+
 	attEventHandler('legDivCloser', 'click',
 		function(evt) {
 			legend_viz_toggle(this); 
 		}
 	);
-		
+
 
 	// ajustar ao tamanho disponível 
 	sizeWidgets();
