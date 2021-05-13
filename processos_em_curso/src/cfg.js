@@ -1,12 +1,12 @@
 //  ===========================================================================
-//  Configuração 
-//  ---------------------------------------------------------------------------
+//  Configuração básica
+//  ----------------- ----------------------------------------------------------
 
 var LAYERVIZ_MODE = 'radiobutton'; // null ou 'radiobutton' -- visibilidade das FEATLAYERS é mutuamente exclusiva, ligar uma apaga  as outras
 
 var AJAX_ENDPOINTS = {
 	locqry: "https://loc.cm-porto.net/loc/c/lq",
-	spec_queries: "https://munisig.cm-porto.pt/riscobdt/doget"
+	spec_queries: "https://munisig.cm-porto.pt/riscobdtdev/doget"
 }
 
 var QUERIES_CFG = {
@@ -58,18 +58,6 @@ var RECORD_PANELS_CFG = {
 	}
 };
 
-VIEW_SRID = 3763;
-
-var VIEW_EXTENT = {
-	xmin: -41600.0,
-	ymin: 165400.0,
-	xmax: -40000.0, 
-	ymax: 166600.0,
-	spatialReference: {
-		wkid: VIEW_SRID
-	}
-};
-
 var SCALE_LIMIT_FUNCS = [
 	function(p_zoomval) {
 		const ref  = 30000, wdg = document.getElementById("zoominmsg");
@@ -86,38 +74,9 @@ var SCALE_LIMIT_FUNCS = [
 var ATTR_TEXT = "2021 CM-Porto / Dados: DM Gestão Urbanística, dev: DM Sistemas Informação / PT-TM06";
 var ATTR_TEXT_MIN = "2021 CM-Porto";
 
-//var SCALEBAR_SHOW = false;
-var COORDSDISPLAY_SHOW = true;
-
 var INITIAL_ANIM_MSECS = 2500;
 
-var HIGHLIGHT_OPTS = {
-	color: [255, 255, 0, 1],
-	haloOpacity: 0.9,
-	fillOpacity: 0.2
-  }		
-
-// Ao ativar as layers indicadas nas chaves deste dict,
-//	 fazer-se-á zoom aos extents indicados, caso o extent
-//   corrente esteja fora.
-//
-//	SE houver repetições / sobreposições de extents ativos para o 
-//	 mesmo contexto de layers, apenas o primeiro extent é aplicado.
-// 
-var EXTENTS2CHK_ON_LYRVIZ_CHANGE = {
-	lyr13_locSRUProcEmCurso: {
-		env: {
-		xmin: -41900.0,
-		ymin: 163200.0,
-		xmax: -39400.0, 
-		ymax: 164900.0,
-		spatialReference: {
-			wkid: VIEW_SRID
-			},
-		},
-		scale: 2000 
-	}
-}
+	
 
 var INTRO_MSG = "Introduza um topónimo, uma morada, um número de processo ou documento (NUP/NUD/ALV) ou número de alvará SRU.<br/><br/> Deve clicar num dos polígonos do mapa para ver os dados associados.";
 var MSG_TIMEOUT_SECS = 7;

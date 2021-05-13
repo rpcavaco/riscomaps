@@ -199,18 +199,33 @@ RecordsViewMgr.show = function(p_key, p_records) {
 	RecordsViewMgr.generatePanels(p_key, p_records, "queryResults");	
 };
 
-// Customização pesquisas especializadas
+//"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
+
+// Customização "picagem" INFO
 QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) {
 	let rows;
 	switch(p_qrykey) {
-		case "pec_findnaoalv": // "find" alias
-			rows = p_jsonresponse["pec_naoalv_codsig"]; // "tableview" alias
+
+		case "pec_naolot_info": // "find" alias
+			rows = p_jsonresponse["pec_naolot_codsig"]; // "tableview" alias
+			RecordsViewMgr.show("main", rows);
+			break;
+
+		case "pec_entrada_info": 
+			rows = p_jsonresponse["pec_entrada_codsig"]; 
+			RecordsViewMgr.show("main", rows);
+			break;
+
+		case "pec_lot_info": // "find" alias
+			rows = p_jsonresponse["pec_lot_codsig"]; // "tableview" alias
 			RecordsViewMgr.show("main", rows);
 			break;
 			
-		default:
-			// nada
-	}
+		case "pec_sru_info": // "find" alias
+			rows = p_jsonresponse["pec_sru_codsig"]; // "tableview" alias
+			RecordsViewMgr.show("main", rows);
+			break;
+	} 
 };
 
 // Nome do 'autocomplete relacionado' para que as interações rato / toque com o mapa limpem a 
@@ -219,7 +234,7 @@ InteractionMgr.connected_autocomplete = 'geocode';
 
 var TMPHighLight = {
 	"strokecolor": "#ff4822",
-	"fill": "#ff7b4a40",
+	"fill": "rgba(0, 0, 0, 0)",
 	"linewidth": 2,
 	"shadowcolor": "#000",
 	"shadowoffsetx": 2,
@@ -228,6 +243,7 @@ var TMPHighLight = {
 };
 var TRANSHighLight = {
 	"strokecolor": "#8ff",
+	"fill": "rgba(0, 0, 0, 0)",
 	"linewidth": 1,
 	"shadowcolor": "#eee",
 	"shadowoffsetx": 1,
@@ -816,7 +832,8 @@ function legend_viz_toggle(p_this_elem) {
 function init_ui() {
 
 	// ** CONFIG **
-	AutocompleteObjMgr.add(new Geocode_LocAutoCompleter(AJAX_ENDPOINTS.locqry, VIEW_SRID, 
+	const srid = 3763; // Necessária esta config aqui, porque o SRID do mapa é definido em base de dados
+	AutocompleteObjMgr.add(new Geocode_LocAutoCompleter(AJAX_ENDPOINTS.locqry, srid, 
 		{
 			parentdiv: "loc_content",
 			textentry: "loc_inputbox",

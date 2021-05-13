@@ -39,7 +39,10 @@ var QueryMgr = {
 						
 						p_this.customizedExec(pp_qrykey, jresp, opt_adic_callback);
 							
+					} else {
+						MessagesController.setMessage("Erro no serviço web", true, true);
 					}
+
 					/* TODO - else mandar para a records area do autocomplete */
 				}						
 			}, JSON.stringify({
@@ -217,12 +220,13 @@ var InteractionMgr = {
 					AutocompleteObjMgr.showRecordsArea(p_this.connected_autocomplete, false);
 				}
 				
-				let feat, cod_sig, sty, lyr, oid, styles;
+				let feat, cod_sig, sty, lyr, oid, styles, qrykey, markerf;
 				if (Object.keys(findings).length > 0 && layernames.length > 0) {
 								
 					for (let i=0; i<layernames.length; i++) {
 						
 						lyr = layernames[i];
+						qrykey = lyr + "_info";
 						oid = findings[lyr][0];
 						
 						if (oid == null) {
@@ -247,13 +251,11 @@ var InteractionMgr = {
 							feat = p_map.getFeature(lyr, oid);
 							if (feat) {
 								cod_sig = feat.attrs.cod_sig;							
-								// TODO -- remover HARDCODING
-								QueryMgr.execute("pec_findnaoalv", [cod_sig]);			
+								QueryMgr.execute(qrykey, [cod_sig]);			
 							}
 						}
-						
-						// desenhar já
-						p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, null, false, null, false);
+
+						p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, false, null, false);
 
 						if (!is_transient) {
 
@@ -266,7 +268,7 @@ var InteractionMgr = {
 									if (p_item != 'normal') {
 										return;
 									}
-									the_mapctrl.drawSingleFeature(p_this.selection.lyr, p_this.selection.oid, inscreenspace, dlayer, sty, null, false, null, false);
+									the_mapctrl.drawSingleFeature(p_this.selection.lyr, p_this.selection.oid, inscreenspace, dlayer, sty, false, null, false);
 								},
 								false // opt_noclobber
 							);	

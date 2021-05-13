@@ -263,38 +263,38 @@ function sru_mrk_sizes(p_scale) {
 	
 	ret = 2;
 	
-	if (p_scale > 8000) {  // maior q 3k
-		ret = 6; 
-	} else if (p_scale > 5000) {  // 2000-3000
+	if (p_scale > 8000) {  // maior q 8k
+		ret = 4; 
+	} else if (p_scale > 5000) {  // 5000-8000
+		ret = 6;
+	} else if (p_scale > 3000) {  // 3000-5000
 		ret = 8;
-	} else if (p_scale > 3000) {  // 2000-3000
-		ret = 10;
-	} else if (p_scale > 2000) {  // 2000-3000
-		ret = 12;
-	} else if (p_scale > 1000) {  // 1000-2000
-		ret = 14;
-	} else if (p_scale > 500) {  // 600-1000
-		ret = 16;
+	} else if (p_scale > 500) {  // 500-3000
+		ret = 8;
 	} else { 
-		ret = 18;    // < 600
+		ret = 6;    // < 500
 	}
 	return ret;
 }
 
-function sru_markers(p_ctx, p_pt, p_scale, p_oid, p_featattrs) {
+function sru_markers(p_ctx, p_pt, p_scale, p_oid, p_featattrs, opt_displaylayer) {
 
 	const sz = sru_mrk_sizes(p_scale);	
 	
 	p_ctx.save();
 
-	p_ctx.strokeStyle = "#40a3a3";
-	
-	if (p_featattrs.cnt > 1) {
-		p_ctx.fillStyle = COLORRAMPS.RAMPS4X4.green_blue.b;
-	} else {
-		p_ctx.fillStyle = COLORRAMPS.RAMPS4X4.green_blue.c;
+	if (opt_displaylayer != "temporary" && opt_displaylayer != "transient") {
+
+		p_ctx.strokeStyle = "#40a3a3";
+		
+		if (p_featattrs.cnt > 1) {
+			p_ctx.fillStyle = COLORRAMPS.RAMPS4X4.green_blue.b;
+		} else {
+			p_ctx.fillStyle = COLORRAMPS.RAMPS4X4.green_blue.c;
+		}
+		p_ctx.lineWidth = 3;
+
 	}
-	p_ctx.lineWidth = 3;
 
 	p_ctx.beginPath();
 	p_ctx.arc(p_pt[0], p_pt[1], sz, 0, 2*Math.PI);

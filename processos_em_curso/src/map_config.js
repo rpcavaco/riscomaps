@@ -3,11 +3,11 @@ var MAPCFG = {
 	"bgcolor": "#f9f4f9",
 	"scale": 5000.0 , 
 	"terrain_center": [-40094.0,164608.0],
-	//"scalewidgets": ["sclval"],
 	"maxscaleview": {
 		"scale": 30000,
 		"terrain_center": [-41200.0,166000.0]
 	},
+	"scalewidgets": ["sclval"],
 	"lang": "pt",
 	"i18n_text": {
 		"pt": {
@@ -54,10 +54,16 @@ var MAPCFG = {
 		"toollayeractions": {
 			"picker": {			
 				"mousemove": {
-					"pec_naolot": "InteractionMgr.mousemove"
+					"pec_naolot": "InteractionMgr.mousemove",
+					"pec_entrada": "InteractionMgr.mousemove",
+					"pec_lot": "InteractionMgr.mousemove",
+					"pec_sru": "InteractionMgr.mousemove",
 				},
 				"mouseup": {
-					"pec_naolot": "InteractionMgr.mouseup"
+					"pec_naolot": "InteractionMgr.mouseup",
+					"pec_entrada": "InteractionMgr.mouseup",
+					"pec_lot": "InteractionMgr.mouseup",
+					"pec_sru": "InteractionMgr.mouseup",
 				}							
 			}
 		}
