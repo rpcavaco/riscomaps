@@ -50,7 +50,7 @@ var MAPCFG = {
 			"elem_height": 27,
 			"max_cols": 4
 		},
-		//"widgetnames_hide_during_refresh": ["legendctrl", "visctrl"],
+		"widgetnames_hide_during_refresh": ["legendctrl"],
 		"toollayeractions": {
 			"picker": {			
 				"mousemove": {
