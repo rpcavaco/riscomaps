@@ -69,6 +69,7 @@ var MAPCFG = {
 		}
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
+	"baseraster": "IMG16",
 	// "lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV"], //,"NPOLPROJ"],
 	"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
 	"rasternames": [],

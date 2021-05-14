@@ -216,13 +216,13 @@ QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) 
 			RecordsViewMgr.show("main", rows);
 			break;
 
-		case "pec_lot_info": // "find" alias
-			rows = p_jsonresponse["pec_lot_codsig"]; // "tableview" alias
+		case "pec_lot_info": 
+			rows = p_jsonresponse["pec_lot_codsig"]; 
 			RecordsViewMgr.show("main", rows);
 			break;
 			
 		case "pec_sru_info": // "find" alias
-			rows = p_jsonresponse["pec_sru_codsig"]; // "tableview" alias
+			rows = p_jsonresponse["pec_sru_codsig"]; 
 			RecordsViewMgr.show("main", rows);
 			break;
 	} 

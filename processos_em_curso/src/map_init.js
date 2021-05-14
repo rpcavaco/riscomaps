@@ -125,25 +125,22 @@ function check_oktopick(p_map)
 			}
 		);
 
-		// um só mapa base raster
-		the_map.setBackgroundRasterLyrName("IMG16");
-		
 		the_map.registerOnPanZoom(
-			function () {
+			function (p_map) {
 				// esconder form de dados e esconder a mensagem flutuante
 				AutocompleteObjMgr.showRecordsArea('geocode', false);
 				MessagesController.hideMessage();
 				
-				var cen = [];
-				the_map.getCenter(cen);
-				
 				var scl = the_map.getScale();
+				var cen = [];
+				p_map.getCenter(cen);
 				
-				// TODO - verificar que funciona
-				
-				// marcar centro em cookie
-				setCookie("terrain_center", cen[0] + "_" + cen[1] + "; SameSite=Strict; max-age=259200");
-				setCookie("mapscale", scl + "; SameSite=Strict; max-age=259200");			
+				vizlyrs_str = p_map.style_visibility.getLyrTOCSVisibilityStr();
+						
+				// marcar centro, escala e layers visiveis em cookies
+				setCookie("risco_terrain_center", cen[0] + "_" + cen[1] + "; SameSite=Strict; max-age=259200");
+				setCookie("risco_mapscale", scl + "; SameSite=Strict; max-age=259200");			
+				setCookie("risco_vizlrs", vizlyrs_str + "; SameSite=Strict; max-age=259200");			
 			}
 		);
 
