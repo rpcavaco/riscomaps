@@ -88,6 +88,8 @@ function check_oktopick(p_map)
 	ac.setMap(map);
 	// raio para fazer fit a circulo em volta de local seleccionado, quando não existe retângulo da área seleccionada.
 	ac.setZoomRadius(120);
+	InteractionMgr.addMap(map);
+	QueryMgr.addMap(map);
 
 	MapsMgr.registerOnDrawFinish("main", "default_drawfinish",
 		function (the_mctrl, p_item) {

@@ -176,61 +176,117 @@ function addrHighlightAnimator(p_mapctrl, p_cod_topo, p_npol, p_marker_coords) {
 // ----------------------------------------------------------------------------
 
 // Customização comportamento caixa de vista de registos alfa
-RecordsViewMgr.show = function(p_key, p_records) {
-	
-	if (p_key == "main") {
+RecordsViewMgr.show = function(p_key, p_payload) {
+
 	// esconder msg introdutória
-		const mainmsgDiv = document.getElementById("mainmsg");
-		if (mainmsgDiv) {
-			mainmsgDiv.style.display = "none"
-        }
-	
-		const spEmLoteam = document.getElementById("sp-emloteam");
-		if (spEmLoteam) {
-			/* if (LayerInteractionMgr.selectedLayerId.indexOf("_loteam") > 1) {
-				spEmLoteam.style.visibility = 'visible';
-			} else {
-				spEmLoteam.style.visibility = 'hidden';
-			} */
-			spEmLoteam.style.visibility = 'hidden';
-		}
+	const mainmsgDiv = document.getElementById("inimsg");
+	if (mainmsgDiv) {
+		mainmsgDiv.style.display = "none";
 	}
-				
-	RecordsViewMgr.generatePanels(p_key, p_records, "queryResults");	
+	const qtl = document.getElementById("qrythemelbl");
+
+	const labels = {
+		"main_naolot_info": "Alvarás de obras em curso",
+		"main_entrada_info": "Operações urbanísticas em curso",
+		"main_lot_info": "Alvarás de loteamento em curso",
+		"main_sru_info": "Alvarás de obras SRU em curso"
+	};
+
+	if (Object.keys(labels).indexOf(p_key) >= 0) {
+		
+		if (qtl) {
+			qtl.innerText = labels[p_key];
+			qtl.style.display = "block";
+		}
+		RecordsViewMgr.generatePanels("main", p_payload);
+
+	}
 };
 
-//"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
-
-// Customização "picagem" INFO
+// Customização "picagem" INFO e resultado de pesquisas alfa
 QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) {
 	let rows;
-	switch(p_qrykey) {
 
-		case "pec_naolot_info": // "find" alias
-			rows = p_jsonresponse["pec_naolot_codsig"]; // "tableview" alias
-			RecordsViewMgr.show("main", rows);
-			break;
+	const keys = {
+		"pec_findbydoc_qry": [null,"bydocqry"],
+		"pec_naolot_info": ["pec_naolot_codsig", "main_naolot_info"],
+		"pec_entrada_info": ["pec_entrada_codsig", "main_entrada_info"],
+		"pec_lot_info": ["pec_lot_codsig", "main_lot_info"],
+		"pec_sru_info": ["pec_sru_codsig", "main_sru_info"],
+	};
 
-		case "pec_entrada_info": 
-			rows = p_jsonresponse["pec_entrada_codsig"]; 
-			RecordsViewMgr.show("main", rows);
-			break;
+	if (keys[p_qrykey] !== undefined) {
 
-		case "pec_lot_info": 
-			rows = p_jsonresponse["pec_lot_codsig"]; 
-			RecordsViewMgr.show("main", rows);
-			break;
+		if (keys[p_qrykey][0] != null) {
+
+			rows = p_jsonresponse[keys[p_qrykey][0]]; 
+			RecordsViewMgr.show(keys[p_qrykey][1], rows);
+
+		} else {
+
+			let pldkeys, lyrname=null, feat;
+
+			pldkeys = Object.keys(p_jsonresponse);
+			if (pldkeys.length == 0) {
+				return;
+			}
+	
+			switch(pldkeys[0]) {
+
+				case "entrada":
+					lyrname = "pec_entrada";
+					break;
+		
+				case "lot":
+					lyrname = "pec_lot";
+					break;
+		
+				case "nao_lot":
+					lyrname = "pec_naolot";
+					break;
+		
+				case "sru":
+					lyrname = "pec_sru";
+					break;	
+			}
 			
-		case "pec_sru_info": // "find" alias
-			rows = p_jsonresponse["pec_sru_codsig"]; 
-			RecordsViewMgr.show("main", rows);
-			break;
-	} 
+			if (lyrname != null && p_jsonresponse[pldkeys[0]].features.length > 0) {
+				feat = p_jsonresponse[pldkeys[0]].features[0];
+				InteractionMgr.zoomToSelection(true, feat.env, lyrname, feat.oid);
+			}
+		}
+
+	} else {
+		console.warn("QueryMgr.customizedExec, invalid key:", p_qrykey);
+	}
+
 };
+
+QueryMgr.clearResults = function() {
+
+	const qtl = document.getElementById("qrythemelbl");
+	if (qtl) {
+		qtl.style.display = "none";
+	}
+	RecordsViewMgr.clear("main");
+
+	const mainmsgDiv = document.getElementById("inimsg");
+	if (mainmsgDiv) {
+		mainmsgDiv.style.display = "block";
+	}	
+}
 
 // Nome do 'autocomplete relacionado' para que as interações rato / toque com o mapa limpem a 
 //   a respetiva 'records area' de resultados
 InteractionMgr.connected_autocomplete = 'geocode';
+
+// Campos a usar na operação INFO (InteractionMgr.mousechange), por layer com info ativo
+InteractionMgr.info_key_fields = {
+	"pec_naolot": ["cod_sig"],
+	"pec_entrada": ["cod_sig"],
+	"pec_lot": ["cod_sig"],
+	"pec_sru": ["cod_sig"]
+};
 
 var TMPHighLight = {
 	"strokecolor": "#ff4822",
@@ -261,8 +317,100 @@ InteractionMgr.highlightStyles = {
 
 // Registo de ações a exceutar previamente ao processamento de qualquer 'mouseup'
 InteractionMgr.onBeforeMouseUp = function(p_map, p_x, p_y, p_layernames, p_findings) {
-	RecordsViewMgr.clear("main");
-}
+	QueryMgr.clearResults();
+};
+
+InteractionMgr.infoQuery = function(p_lyr, p_feat) {
+
+	if (this.info_key_fields[p_lyr] === undefined) {
+		console.warn("InteractionMgr.infoQuery, no info_key_fields defined for layer:", p_lyr);
+		return;
+	}
+	const info_fields = this.info_key_fields[p_lyr];
+	const qrykey = p_lyr + "_info";
+	const info_values = [];
+
+	if (p_feat) {
+		for (let ifi=0; ifi<info_fields.length; ifi++) {
+			info_values.push(p_feat.attrs[info_fields[ifi]]);
+		}
+		if (info_values.length < 1) {
+			throw new Error("InteractionMgr.infoQuery, no values for query on layer:", p_lyr);
+		}
+
+		QueryMgr.execute(qrykey, info_values);			
+	}
+
+};
+
+InteractionMgr.zoomToSelection = function(b_doinfo, opt_env, opt_lyr, opt_oid) {
+
+	if (opt_lyr != null) {
+		this.selection.lyr = opt_lyr;
+	}
+	if (opt_oid != null) {
+		this.selection.oid = opt_oid;
+	}
+
+	if (opt_env != null) {
+		this.selection.env = opt_env;
+	}
+
+	if (this.selection.lyr == null) {
+		throw new Error("InteractionMgr.zoomToSelection - sel layer is null");
+	}
+	if (this.selection.oid == null) {
+		throw new Error("InteractionMgr.zoomToSelection - sel oid is null");
+	}
+	if (this.selection.env == null) {
+		throw new Error("InteractionMgr.zoomToSelection - sel env is null");
+	}
+
+	(function(p_this, p_doinfo) {
+		p_this.activeMap.registerOnDrawFinish("highlight_features",
+			function (the_mctrl, p_item)
+			{
+				if (p_item != 'normal') {
+					return;
+				}
+
+				const inscreenspace = true;
+				const dlayer = 'temporary';
+				const do_debug = false;
+				let styles;
+
+				if (p_this.highlightStyles.hasOwnProperty(p_this.selection.lyr)) {
+					styles = p_this.highlightStyles[p_this.selection.lyr];
+				} else if (p_this.highlightStyles.hasOwnProperty("ALL")) {
+					styles = p_this.highlightStyles["ALL"];
+				} else {
+					console.warn("InteractionMgr.zoomToSelection highlightStyles has no config for layer '"+p_this.selection.lyr+"' or ALL.");
+					return;
+				}
+
+				the_mctrl.drawSingleFeature(p_this.selection.lyr,
+					p_this.selection.oid, inscreenspace, dlayer,  
+					styles.temporary, false, null, do_debug);
+
+				if (p_doinfo) {
+					const feat = the_mctrl.getFeature(p_this.selection.lyr, p_this.selection.oid);
+					if (feat!=null) {
+						p_this.infoQuery(p_this.selection.lyr, feat);
+					}
+				}
+
+			},
+			false // opt_noclobber
+		);
+	})(this, b_doinfo);
+
+	if (!this.activeMap.style_visibility.isLyrTOCVisibile(this.selection.lyr)) {
+		this.activeMap.style_visibility.releaseLayerVisibility(this.selection.lyr);
+	}	
+
+	const envArray = this.selection.env;
+	this.activeMap.refreshFromMinMax(envArray[0], envArray[1], envArray[2], envArray[3]); 
+};
 
 // ----------------------------------------------------------------------------
 // Final "extend / customize managers"
@@ -315,20 +463,10 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 
 		this.cleanSearch();
 
-		if (typeof QueriesMgr != 'undefined') {
-			QueriesMgr.clearResults();
+		if (typeof QueryMgr != 'undefined') {
+			QueryMgr.clearResults();
 		}
 
-		// TODO -- avaliar a necessidade de manter este vindo da app AGS
-		/*
-		if (typeof LayerInteractionMgr != 'undefined') {
-			LayerInteractionMgr.clearFunc();
-		}
-		*/
-
-        //NPolHighlighter.clear();
-        //NPolHighlighter.clearMarked();
-       
         if (MapsMgr) {
 			// em todos os mapas
 			let the_map;
@@ -348,16 +486,17 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 		const nupRegEx = new RegExp("^(nud|nup|p)\/\\d{3,8}\/\\d{2,4}", 'i');
 		const alvCMPEx = new RegExp("^alv\/\\d{1,8}\/\\d{2,4}\/(dmu|cmp)", 'i');
 		const alvSRUEx = new RegExp("^\\d{3,8}\/\\d{2,4}\/sru", 'i');
+
+		const pt_buffer_dist = 50;
+
 		if (notTopoRegEx.test(p_trimmed_qrystr)) {
 			this.emptyCurrentRecords();
 			if (nupRegEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
-			}
-			if (alvCMPEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
-			}
-			if (alvSRUEx.test(p_trimmed_qrystr)) {
-				QueriesMgr.executeQuery("byDoc", [ p_trimmed_qrystr ], true);
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
+			} else if (alvCMPEx.test(p_trimmed_qrystr)) {
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
+			} else if (alvSRUEx.test(p_trimmed_qrystr)) {
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
 			}
 			return false;
 			

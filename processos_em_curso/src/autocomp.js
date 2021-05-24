@@ -400,25 +400,33 @@ class AutoCompleter {
 			let rec0, prev_listidx = -1, list_idx = -1;
 			attEventHandler(p_this.widgets["textentry"], 'keyup', 
 				function(evt) {
-					let kc, len, target = getTarget(evt);
+					let kc, len, enterpressed = false, target = getTarget(evt);
 					if (!target) return;
-					
+
+					if (evt.ctrlKey && evt.key != 'Control')  {				
+						return true;
+					}
+
 					if (evt["key"] !== undefined) {
 						kc = evt.key;
 					} else {
 						kc = evt.keyCode;
 					}
-					
+
 					if (kc == 'Enter') 
 					{
 						if (list_idx < 0) {
 							list_idx = 0;
 						}
 						rec0 = p_this.getRecord(list_idx);
-						p_this.enterHandler(rec0);
-						list_idx = -1;
-						finishEvent(evt);
-						return false;
+						if (rec0 != null) {
+							p_this.enterHandler(rec0);
+							list_idx = -1;
+							finishEvent(evt);
+							return false;
+						} else {
+							enterpressed = true;
+						}
 					} else if (kc == 'ArrowDown') {
 						let tbl, trs, list_wid = p_this.widgets["recordsarea"];
 						if (list_wid) {
@@ -479,25 +487,12 @@ class AutoCompleter {
 					}
 					
 					let usabletxt = target.value.replace(/[ ]+/g, ' ');
-					
 					len = p_this.setText(usabletxt);
 					if (len > 0) {
 						p_this.activateCleanButton(true);
 					} else {
 						p_this.deleteHandler();
 					}	
-					
-					const trimmed = usabletxt.trim();
-					if (p_this.prevEnteredText == trimmed) {
-						return false;
-					}
-					
-					// Outras pesquisas ----------------------------
-					if (!p_this.altQueriesHandler(trimmed)) {
-						return false;
-					}
-
-					// Final outras pesquisas ----------------------
 
 					if (p_this.checkInputTimerID != null) {
 						clearInterval(p_this.checkInputTimerID);
@@ -505,6 +500,19 @@ class AutoCompleter {
 						p_this.checkInputCnt = 0;
 					}
 					
+					const trimmed = usabletxt.trim();
+					if (!enterpressed && p_this.prevEnteredText == trimmed) {
+						finishEvent(evt);
+						return false;
+					}
+
+					// Outras pesquisas ----------------------------
+					if (!p_this.altQueriesHandler(trimmed)) {
+						finishEvent(evt);
+						return false;
+					}
+
+					// Final outras pesquisas ----------------------
                     (function(pp_this) {
 						pp_this.checkInputTimerID = setInterval(
 							function() { AC_checkInputTimer(pp_this); },

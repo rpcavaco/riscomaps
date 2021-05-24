@@ -147,7 +147,7 @@ function SwitchingPanelCollection(p_collname) {
 }
 
 
-function RecordPanelSwitcher() {
+function RecordPanelSwitcher(p_divname) {
 
 	/*
 	Class for switching pages of record oriented content.
@@ -164,6 +164,7 @@ function RecordPanelSwitcher() {
 	this.attr_cfg = {};
 	this.height_limits = [];
 	this.results_div = null;
+	this.the_div_name = p_divname;
 	this.records = {
 	};
 
@@ -398,15 +399,15 @@ function RecordPanelSwitcher() {
 		return num;
 	};
 
-	this.generatePanels = function(p_records, p_parentdiv_id, p_heightv) {
+	this.generatePanels = function(p_records, p_heightv) {
 	
 		if (!p_records.length) {
 			return;
 		}
 
-		const resultsDiv = document.getElementById(p_parentdiv_id);
+		const resultsDiv = document.getElementById(this.the_div_name);
 		if (resultsDiv == null) {
-			console.warn("RecordPanelSwitcher: generatePanels, parent div not found:", p_parentdiv_id);
+			console.warn("RecordPanelSwitcher: generatePanels, parent div not found:", this.the_div_name);
 			return;
 		}
 		

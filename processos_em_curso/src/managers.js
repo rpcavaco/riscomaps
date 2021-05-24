@@ -3,6 +3,20 @@ var QueryMgr = {
 	
 	xhr: null, 
 	url: AJAX_ENDPOINTS.spec_queries,
+	maps: [],
+	activeMap: null,
+
+	addMap: function(p_map) {
+		this.maps.push(p_map);
+		this.activeMap = this.maps[this.maps.length-1];
+	},
+
+	activateMap: function(p_idx) {
+		if (p_idx < 0 || p_idx >= this.maps.length) {
+			throw new Error("QueryMgr.activateMap, invalid index:", p_idx);
+		}
+		this.activeMap = this.maps[p_idx];
+	},
 
     abortPreviousSearchCall: function() {
     	if (this.xhr != null) {
@@ -11,10 +25,16 @@ var QueryMgr = {
     	}
     },
 	
-	execute: function(p_qrykey, p_argslist, opt_adic_callback) {
+	execute: function(p_qrykey, p_valueslist, opt_pbufferdist, opt_adic_callback) {
+
+		if (opt_pbufferdist) {
+			pbfdist = opt_pbufferdist;
+		} else {
+			pbfdist = 0;
+		}	
 
 		this.abortPreviousSearchCall();
-		(function(p_this, pp_qrykey) {
+		(function(p_this, pp_qrykey, pp_valueslist, pp_pbfdist) {
 
 			p_this.xhr = ajaxSender(p_this.url, function() { 
 				if (this.readyState === this.DONE) {
@@ -43,22 +63,28 @@ var QueryMgr = {
 						MessagesController.setMessage("Erro no serviço web", true, true);
 					}
 
-					/* TODO - else mandar para a records area do autocomplete */
 				}						
 			}, JSON.stringify({
 						alias: pp_qrykey,
-						filtervals: p_argslist, 
+						filtervals: pp_valueslist, 
+						pbuffer: pp_pbfdist,
 						lang: "pt"
 					}), 
 				p_this.xhr);
 				
-		})(this, p_qrykey);
+		})(this, p_qrykey, p_valueslist, pbfdist);
 	},
 	
 	// method to extend / complete
 	customizedExec: function(p_qrykey, p_jsonresponse, opt_adic_callback) {
 		// para implementar			em classe estendida
 		throw new Error("customizedExec not implemented");	
+	},
+	
+	// method to extend / complete
+	clearResults: function() {
+		// para implementar			em classe estendida
+		throw new Error("clearResults not implemented");	
 	}
 		
 };
@@ -74,6 +100,7 @@ var LayervizMgr = {
 			for (let lyrId in this.layerItems) {
 				if (p_visible) {
 					if (lyrId != p_this_layerid && this.layerItems[lyrId].visible) {
+
 						this.layerItems[lyrId].visible = false;
 						this.layerItems[lyrId].panel.open = false;
 						this.layerItems[p_this_layerid].panel.open = true;
@@ -108,7 +135,7 @@ var RecordsViewMgr = {
 		for (let k in RECORD_PANELS_CFG) {
 			cfg = RECORD_PANELS_CFG[k];
 			if (cfg["type"] == 'switcher') {
-				this.panels[k] = new RecordPanelSwitcher();
+				this.panels[k] = new RecordPanelSwitcher(cfg["the_div"]);
 				this.panels[k].max_attrs_per_page = cfg["max_attrs_per_page"];
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
@@ -185,14 +212,39 @@ var InteractionMgr = {
 	mouseup: null,
 	selection: {
 		lyr: null,
-		oid: null
+		oid: null,
+		env: null
 	},
-	
+	maps: [],
+	activeMap: null,
 	highlightStyles: {},
+	info_key_fields: {},
 
 	onBeforeMouseUp: function() {
 		// para implementar
-		throw new Error("show not implemented");	
+		throw new Error("InteractionMgr.onBeforeMouseUp not implemented");	
+	},
+
+	zoomToSelection: function(opt_env, opt_lyr, opt_oid) {
+		// para implementar
+		throw new Error("InteractionMgr.zoomToSelection not implemented");	
+	},
+
+	addMap: function(p_map) {
+		this.maps.push(p_map);
+		this.activeMap = this.maps[this.maps.length-1];
+	},
+
+	activateMap: function(p_idx) {
+		if (p_idx < 0 || p_idx >= this.maps.length) {
+			throw new Error("InteractionMgr.activateMap, invalid index:", p_idx);
+		}
+		this.activeMap = this.maps[p_idx];
+	},
+
+	infoQuery: function(p_lyr, p_feat) {
+		// para implementar
+		throw new Error("InteractionMgr.infoQuery not implemented");	
 	},
 
 	init: function() {		
@@ -216,17 +268,18 @@ var InteractionMgr = {
 
 					p_this.selection.lyr = null;
 					p_this.selection.oid = null;
+					p_this.selection.env = null;
 
 					AutocompleteObjMgr.showRecordsArea(p_this.connected_autocomplete, false);
 				}
 				
-				let feat, cod_sig, sty, lyr, oid, styles, qrykey;
+				let feat, sty, lyr, oid, styles, qrykey, info_fields, info_values = [];
 				if (Object.keys(findings).length > 0 && layernames.length > 0) {
 								
 					for (let i=0; i<layernames.length; i++) {
 						
 						lyr = layernames[i];
-						qrykey = lyr + "_info";
+
 						oid = findings[lyr][0];
 						if (oid == null) {
 							continue;
@@ -254,11 +307,7 @@ var InteractionMgr = {
 							sty = styles.transient;
 						} else {							
 							sty = styles.temporary;
-							feat = p_map.getFeature(lyr, oid);
-							if (feat) {
-								cod_sig = feat.attrs.cod_sig;							
-								QueryMgr.execute(qrykey, [cod_sig]);			
-							}
+							p_this.infoQuery(lyr, feat);
 						}
 
 						p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, false, null, false);

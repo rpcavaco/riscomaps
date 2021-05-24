@@ -14,6 +14,7 @@ var QUERIES_CFG = {
 
 var RECORD_PANELS_CFG = {
 	main: {
+		the_div: "queryResults", 
 		type: "switcher", // para já só 'switcher'
 		max_attrs_per_page: 10,
 		rotator_msg: "Processo {0} de {1}",

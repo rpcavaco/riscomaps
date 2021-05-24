@@ -226,6 +226,9 @@ body,
   opacity: 1;
 }
 
+#qrythemelbl {
+	display: none;
+}
 
 #gridDiv {
 	background-color: rgba(24, 68, 155, 0.85);
@@ -453,6 +456,7 @@ body,
     -webkit-box-sizing: border-box;
 	border-radius: 0;
 	-webkit-border-radius: 0;
+	border: 0;
     width: 400px;
     font-size: 16px;
     height: 28px;
