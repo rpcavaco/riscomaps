@@ -447,7 +447,7 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 	}
 
 	beforeResponseDone(p_respobj) {
-		hideLoaderImg();
+		//hideLoaderImg();
 	}	
 
 	beforeExecSearch() {
