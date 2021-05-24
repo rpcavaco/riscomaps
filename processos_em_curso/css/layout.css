@@ -37,34 +37,24 @@ body,
 	background-repeat: no-repeat;
 	background-size: 10px 50px;
 	background-position: 60% 40%;
-	background-color: #f8f8f8;
+	background-color: rgba(24, 68, 155, 0.85);;
 	position: absolute;
 	z-index: 900;
 	padding: 2px;
 	margin: 0;
 	right: 4px;
-	top: 12px;
+	top: 16px;
 	height: 56px;
 	width: 12px;
 }
 
 #legDivCloser.opened {
-    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22grey%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M1,49L9,25 1,1%22 /%3E%3C/svg%3E');
+    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22white%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M1,49L9,25 1,1%22 /%3E%3C/svg%3E');
 }
 
 #legDivCloser.closed {
-    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22grey%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M9,49L1,25 9,1%22 /%3E%3C/svg%3E');
+    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22white%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M9,49L1,25 9,1%22 /%3E%3C/svg%3E');
 }
-
-/*
-@media (max-width: 430px) {
-	#legDivCloser {
-		top: 48px;
-	}	
-	#legDiv {
-		top: 48px;
-	}	
-} */
 
 
 #legendctrl {
@@ -82,6 +72,15 @@ body,
 	height: 300px;
 	border-top-left-radius: 6px;
 	border-bottom-left-radius: 6px;
+}
+
+@media (max-width: 850px) {
+	#legDivCloser {
+		top: 48px;
+	}	
+	#legendctrl {
+		top: 48px;
+	}	
 }
 
 #legendctrl table {
@@ -247,6 +246,30 @@ body,
 	width: 22px;
 }
 
+#gridDivCloser {
+	background-repeat: no-repeat;
+	background-size: 10px 50px;
+	background-position: 60% 40%;
+	background-color: rgba(24, 68, 155, 0.85);;
+	position: absolute;
+	z-index: 1000;
+	padding: 2px;
+	margin: 0;
+	right: 20px;
+	bottom: 60px;
+	height: 56px;
+	width: 12px;
+}
+
+#gridDivCloser.opened {
+    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22white%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M1,49L9,25 1,1%22 /%3E%3C/svg%3E');
+	right: 20px;
+}
+
+#gridDivCloser.closed {
+    background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 12 50%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22white%22 line-width=%222%22 stroke-width=%222%22 stroke-linejoin=%22round%22 d=%22M9,49L1,25 9,1%22 /%3E%3C/svg%3E');
+	right: 4px;
+}
 
 
 @media (max-width: 430px) {
@@ -551,6 +574,12 @@ body,
 	position: absolute;
 	bottom: 40px;
 	z-index: 1000;
+}
+
+@media (max-width: 430px) {
+	#indicators {
+		visibility: hidden;
+	}
 }
 
 #sclvaldiv {

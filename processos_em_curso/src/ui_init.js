@@ -10,11 +10,11 @@ function sizeWidgetsMode() {
 
 	if (parseInt(winsize.width) > 1200) {       
 		ret = 4;
-	} else if (parseInt(winsize.width) > 530) {       
+	} else if (parseInt(winsize.width) > 530) {  // 531 - 1200
 		ret = 3;
-	} else if (parseInt(winsize.width) > 430) {       
+	} else if (parseInt(winsize.width) > 430) {  // 431 - 531
 		ret = 2;
-	} else {       
+	} else {       // <= 430
 		ret = 1;
 	}       
 	
@@ -580,7 +580,7 @@ function sizeWidgets() {
 	let wdg = document.getElementById("loc_inputbox");
 	let wdg3, wdg2 = document.getElementById("loc_resultlistarea");
 	wdg3 = document.getElementById("loc_content");
-	
+
 	if (wdg!=null && wdg2!=null) {       
 		let mcw, w;
 		if (mode == 4) {       
@@ -604,8 +604,11 @@ function sizeWidgets() {
 	let v;
 	if (mode > 2) {
 		v = 200;
+		LegendViz.changeVizFlag(true);
 	} else {
 		v = 55;
+
+		// esconder legenda
 	}
 	MessagesController.left = v;
 	wdg3.style.left = v + "px";
@@ -790,8 +793,9 @@ function initialAnimation () {
 			const l = [
 				["logotxt", false],
 				//["legendctrl", true],
-				["legDivCloser", true],
+				//["legDivCloser", true],
 				["gridDivContainer", true],
+				["gridDivCloser", true],
 				["loading", true],
 				["loc_inputbox", true]
 			];
@@ -937,25 +941,91 @@ var MessagesController = {
 	}  	
 }
 
-function legend_viz(p_doshow) {
-	const w1 = document.getElementById("legDivCloser");
-	const w2 = document.getElementById("legDiv");
-	if (w1!=null && w2!=null) {
-		if (p_doshow) {
-			w1.classList.remove("closed");
-			w1.classList.add("opened");
-			w2.style.visibility = "visible";
+var LegendViz = {
+
+	visible: false,
+	blurred: false,
+
+	changeVizFlag: function(p_viz) {
+		this.visible = p_viz;
+	},
+
+	legend_viz: function(p_doshow) {
+		this.visible = p_doshow;
+		this.enforce();
+	},
+
+	legend_blur: function(p_doblur) {
+		this.blurred = p_doblur;
+		const w2 = document.getElementById("legendctrl");
+		if (this.blurred) {
+			w2.style.opacity = 0.5;
 		} else {
-			w1.classList.remove("opened");
-			w1.classList.add("closed");
-			w2.style.visibility = "hidden";
+			this.enforce();
+		}		
+	},
+
+	enforce: function() {
+		const w1 = document.getElementById("legDivCloser");
+		const w2 = document.getElementById("legendctrl");
+		if (w1!=null && w2!=null) {
+			if (this.visible) {
+				w1.classList.remove("closed");
+				w1.classList.add("opened");
+				w2.style.visibility = "visible";
+			} else {
+				w1.classList.remove("opened");
+				w1.classList.add("closed");
+				w2.style.visibility = "hidden";
+			}
+			if (this.blurred) {
+				w2.style.opacity = 0.5;
+			} else {
+				w2.style.opacity = 1;
+			}		
 		}
+	},
+
+	legend_viz_toggle: function(p_this_elem) {
+		const doshow = ! p_this_elem.classList.contains("opened"); 
+		this.legend_viz(doshow);
 	}
 }
 
-function legend_viz_toggle(p_this_elem) {
-	const doshow = ! p_this_elem.classList.contains("opened"); 
-	legend_viz(doshow);
+var gridDivViz = {
+
+	visible: true,
+
+	changeVizFlag: function(p_viz) {
+		this.visible = p_viz;
+	},
+
+	viz: function(p_doshow) {
+		this.visible = p_doshow;
+		this.enforce();
+	},
+
+	enforce: function() {
+		const w1 = document.getElementById("gridDivCloser");
+		const w2 = document.getElementById("gridDivContainer");
+		if (w1!=null && w2!=null) {
+			if (this.visible) {
+				w1.classList.remove("closed");
+				w1.classList.add("opened");
+				w2.style.visibility = "visible";
+			} else {
+				w1.classList.remove("opened");
+				w1.classList.add("closed");
+				w2.style.visibility = "hidden";
+			}
+		}
+	},
+
+	viz_toggle: function(p_this_elem) {
+		const doshow = ! p_this_elem.classList.contains("opened"); 
+		console.log("1026hhhh");
+		this.viz(doshow);
+	}
 }
 
 // ----------------------------------------------------------------------------
@@ -998,7 +1068,13 @@ function init_ui() {
 
 	attEventHandler('legDivCloser', 'click',
 		function(evt) {
-			legend_viz_toggle(this); 
+			LegendViz.legend_viz_toggle(this); 
+		}
+	);
+
+	attEventHandler('gridDivCloser', 'click',
+		function(evt) {
+			gridDivViz.viz_toggle(this); 
 		}
 	);
 
