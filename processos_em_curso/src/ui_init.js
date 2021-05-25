@@ -559,7 +559,7 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 //   3. Animação inicial
 //   4. Controlador de mensagens de diálogo com o utilizador
 //   5. Controles de toggling para "encolher":
-//       a) a legenda -- 'legend_viz' e 'legend_viz_toggle'
+//       a) a legenda -- 'viz' e 'viz_toggle'
 // ----------------------------------------------------------------------------
 
 // NÃO ALTERAR ESTE NOME- É PADRÃO REFERENCIADO EM RISCOJS
@@ -950,12 +950,12 @@ var LegendViz = {
 		this.visible = p_viz;
 	},
 
-	legend_viz: function(p_doshow) {
+	viz: function(p_doshow) {
 		this.visible = p_doshow;
 		this.enforce();
 	},
 
-	legend_blur: function(p_doblur) {
+	blur: function(p_doblur) {
 		this.blurred = p_doblur;
 		const w2 = document.getElementById("legendctrl");
 		if (this.blurred) {
@@ -986,9 +986,9 @@ var LegendViz = {
 		}
 	},
 
-	legend_viz_toggle: function(p_this_elem) {
+	viz_toggle: function(p_this_elem) {
 		const doshow = ! p_this_elem.classList.contains("opened"); 
-		this.legend_viz(doshow);
+		this.viz(doshow);
 	}
 }
 
@@ -1023,7 +1023,6 @@ var gridDivViz = {
 
 	viz_toggle: function(p_this_elem) {
 		const doshow = ! p_this_elem.classList.contains("opened"); 
-		console.log("1026hhhh");
 		this.viz(doshow);
 	}
 }
@@ -1068,7 +1067,7 @@ function init_ui() {
 
 	attEventHandler('legDivCloser', 'click',
 		function(evt) {
-			LegendViz.legend_viz_toggle(this); 
+			LegendViz.viz_toggle(this); 
 		}
 	);
 
