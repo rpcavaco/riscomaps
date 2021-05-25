@@ -141,7 +141,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_entrada": {
@@ -212,7 +212,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_lot": {
@@ -259,7 +259,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_sru": {
@@ -299,7 +299,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"IMG16": {
@@ -364,11 +364,11 @@ var MAPCFG = {
 					"stroke": "#3A3A3A", 
 					"placementtype": "ALONG",
 					"baseline": "MIDDLE",
-					"bgstyle": "rgba(255, 255, 255, 0.5)",
-					"scalelimits": {
-						"top": 39900
-					}
+					"bgstyle": "rgba(255, 255, 255, 0.5)"
 				},
+			},
+			"scalelimits": {
+				"top": 10000
 			},
 			"index": {
 				"name": "TOPO_IX",

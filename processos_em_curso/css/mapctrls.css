@@ -40,10 +40,27 @@
 	border-radius: 5px 5px 0 0;
 }
 
-.minimalCtrlsVerticalBottom:hover {
-	background-color: #f2f2f2;
+.minimalCtrlsVertical:hover {
+	background-color: #e7e7e7;
 }
 
-.minimalCtrlsVerticalTop:hover {
-	background-color: #f2f2f2;
+.ctrlPlus {
+	background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22black%22 stroke-width=%221%22 d=%22M 4,14 h 16 M 12,6 v 16 %22 /%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	height: 24px;
+	width: 24px;
+}
+
+.ctrlMinus {
+	background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22black%22 stroke-width=%221%22 d=%22M 4,14 h 16 %22 /%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	height: 24px;
+	width: 24px;
+}
+
+.ctrlHome {
+	background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 24 24%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22none%22 stroke=%22black%22 stroke-width=%221%22 stroke-linejoin=%22round%22 d=%22M 4,14 L 12,8 L 20,14 h -3 v 8 h -10 v -8 z %22 /%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	height: 24px;
+	width: 24px;
 }
