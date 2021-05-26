@@ -289,7 +289,7 @@ InteractionMgr.info_key_fields = {
 };
 
 var TMPHighLight = {
-	"strokecolor": "#ff4822",
+	"strokecolor": "#FFE100",
 	"fill": "rgba(0, 0, 0, 0)",
 	"linewidth": 2,
 	"shadowcolor": "#000",
@@ -298,7 +298,7 @@ var TMPHighLight = {
 	"shadowblur": 2	
 };
 var TRANSHighLight = {
-	"strokecolor": "#8ff",
+	"strokecolor": "#23fefe",
 	"fill": "rgba(0, 0, 0, 0)",
 	"linewidth": 1,
 	"shadowcolor": "#eee",
