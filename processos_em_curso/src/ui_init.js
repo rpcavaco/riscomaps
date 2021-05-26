@@ -603,7 +603,7 @@ function sizeWidgets() {
 
 	let v;
 	if (mode > 2) {
-		v = 200;
+		v = 192;
 		LegendViz.changeVizFlag(true);
 	} else {
 		v = 55;
@@ -695,10 +695,10 @@ function initialAnimation () {
 		let maxv, minv;
 		if (mode > 2) {
 			maxv = (this.winsize.width - (this.winsize.width / 4)) / 2.0;
-			minv = 60;
+			minv = 52;
 		} else {
 			maxv = 70;
-			minv = 60;
+			minv = 52;
 		}
 		
 		let ret = minv + (maxv-minv) * this.stepperq(p_elapsedq);

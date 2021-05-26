@@ -321,9 +321,6 @@ body,
 
 #logofloater {
 	position: absolute;
-	/*top: 12px;
-	left: 60px;
-	width: 130px;*/
 	font-family: 'Regular-Bold';	
 	font-size: 36px;
 	z-index: 20;
