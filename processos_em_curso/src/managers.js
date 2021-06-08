@@ -136,11 +136,9 @@ var RecordsViewMgr = {
 			cfg = RECORD_PANELS_CFG[k];
 			if (cfg["type"] == 'switcher') {
 				this.panels[k] = new RecordPanelSwitcher(cfg["the_div"]);
-				this.panels[k].max_attrs_per_page = cfg["max_attrs_per_page"];
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
 				this.panels[k].attr_cfg = cfg["attr_cfg"];
-				this.panels[k].height_limits = cfg["height_limits"];
 			}
 		}
 	},
@@ -171,27 +169,13 @@ var RecordsViewMgr = {
 		}   
 		return maxcnt;
 	},	
-	generatePanels: function(p_key, p_records, p_parentdiv_id, p_heightv) {
+	generatePanels: function(p_key, p_records) {
+		const dims =  bodyCanvasDims();
+		const heightv = dims[1] - 320 - 80; // legenda + folga (cabeçalho e rodapé da )
 
-		let heightv=null;
-		let height_limits = this._get(p_key).height_limits; 
-		let max_attrs_per_page = this._get(p_key).max_attrs_per_page; 
-		
-		let valcount = Math.min(max_attrs_per_page, this._valcount("main", p_records));
-		for (let i=0; i<height_limits.length; i++) {
-			if (height_limits[i][0] >= valcount) {
-				heightv = height_limits[i][1];
-				break;
-			}
-		}
-		if (heightv == null) {
-			// se heightv nao tiver sido definida, colocar valor mais alto
-			heightv = height_limits[height_limits.length-1][1];
-		}
-		
 		const panelSwitcher = this._get(p_key);
 		panelSwitcher.clear();
-		panelSwitcher.generatePanels(p_records, p_parentdiv_id, heightv);
+		panelSwitcher.generatePanels(p_records, heightv);
 	},
 	show: function(p_records) {
 		// para implementar			em classe estendida

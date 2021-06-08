@@ -18,7 +18,7 @@ function sizeWidgetsMode() {
 		ret = 1;
 	}       
 	
-	return ret;
+	return [ret, winsize];
 }
 
 //** Config ** inclui config
@@ -575,7 +575,9 @@ function hideLoaderImg() {
 //** Config ** inclui config
 function sizeWidgets() {
 	
-	let mode = sizeWidgetsMode();
+	const modeobj = sizeWidgetsMode();
+	const mode = modeobj[0];
+	const winsize = modeobj[1];
 
 	let wdg = document.getElementById("loc_inputbox");
 	let wdg3, wdg2 = document.getElementById("loc_resultlistarea");
@@ -642,16 +644,35 @@ function sizeWidgets() {
 		} else {
 			wdg.style.width = '270px';
 		} 
-	}	
+	}
+	
+	wdg = document.getElementById("msgsdiv"); 
+	if (wdg) {
+		if (winsize.height >= 740) {
+			wdg.style.removeProperty("height");
+		} else {
+			wdg.style.height = (winsize.height - 140) + 'px';
+		} 
+		if (winsize.width >= 800) {
+			wdg.style.width = '480px';
+		} else {
+			if (mode > 2) {
+				wdg.style.width = (winsize.width - 200) + 'px';
+			} else {
+				wdg.style.width = (winsize.width - 100) + 'px';
+			}
+		} 
+
+	}		
 }
 
 //** Config ** inclui config
 function initialAnimation () {
 	
-	this.winsize = {
+	/*this.winsize = {
 		width: window.innerWidth || document.body.clientWidth,
 		height: window.innerHeight || document.body.clientHeight,
-	};
+	};*/
 	
 	this.init_offset_x = 0.3;
 	this.hinge = {
@@ -675,7 +696,11 @@ function initialAnimation () {
 	};
 	
 	this.topfunc = function(p_elapsedq) {
-		const maxv = (this.winsize.height - (this.winsize.height / 4)) / 2.0;
+
+		const modeobj = sizeWidgetsMode();
+		const winsize = modeobj[1];
+
+		const maxv = (winsize.height - (winsize.height / 4)) / 2.0;
 		const minv = 12;
 		
 		let ret = minv + (maxv-minv) * this.stepperq(p_elapsedq);
@@ -683,7 +708,11 @@ function initialAnimation () {
 	};
 		
 	this.widfunc = function(p_elapsedq) {
-		const maxw = this.winsize.width / 6;
+
+		const modeobj = sizeWidgetsMode();
+		const winsize = modeobj[1];
+
+		const maxw = winsize.width / 6;
 		const minw = 130;
 		
 		let ret = minw + (maxw-minw) * this.stepperq(p_elapsedq);
@@ -691,10 +720,14 @@ function initialAnimation () {
 	};
 
 	this.leftfunc = function(p_elapsedq) {
-		let mode = sizeWidgetsMode();
+
+		const modeobj = sizeWidgetsMode();
+		const mode = modeobj[0];
+		const winsize = modeobj[1];
+	
 		let maxv, minv;
 		if (mode > 2) {
-			maxv = (this.winsize.width - (this.winsize.width / 4)) / 2.0;
+			maxv = (winsize.width - (winsize.width / 4)) / 2.0;
 			minv = 52;
 		} else {
 			maxv = 70;
@@ -708,8 +741,10 @@ function initialAnimation () {
 	this.fntszfunc = function(p_elapsedq) {
 		let maxv;
 		const minv = 22;
+
+		const modeobj = sizeWidgetsMode();
+		const mode = modeobj[0];
 		
-		let mode = sizeWidgetsMode();
 		if (mode > 2) {
 			maxv = 42;
 		} else {
@@ -720,10 +755,10 @@ function initialAnimation () {
 		return (ret < minv ? minv : ret).toString() + "px";		
 	};
 
-	this.clrfunc = function(p_elapsedq) {
+	/* this.clrfunc = function(p_elapsedq) {
 		const clr1 = "#fff";
-		const clr2 = "#6b80b5";
-		const clr3 = "#0f2f7e";
+		const clr2 = "#c3c9d8";
+		const clr3 = "#8c9cc3";
 		
 		if (this.stepperq(p_elapsedq) < 0.5) {
 			return clr3;
@@ -732,7 +767,7 @@ function initialAnimation () {
 		} else {
 			return clr1;
 		}
-	};
+	}; */
 
 	this.animItems = {
 		"logofloater": {
@@ -758,13 +793,13 @@ function initialAnimation () {
 				return this.widfunc(p_elapsedq);
 			}
 			
-		},
-		"logotxt": {
+		}
+		/*"logotxt": {
 			"color": function(p_elapsedq) {
 				return this.clrfunc(p_elapsedq);
 			}
 			
-		},
+		}, */
 
 	};
 		
@@ -899,8 +934,6 @@ var MessagesController = {
 			msgsdiv.appendChild(iconimg);
 			
 			var p = document.createElement("p");
-			//var cont = document.createTextNode(this.messageText);
-			//p.appendChild(cont);
 			p.insertAdjacentHTML('afterBegin', this.messageText);
 			msgsdiv.appendChild(p);
 			

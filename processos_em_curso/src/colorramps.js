@@ -17,10 +17,10 @@ var COLORRAMPS = {
 			d: "#921bf4"
 		},
 		mag_ora: {
-			a: "#be11f2",
-			b: "#ce2bb5",
-			c: "#de447b",
-			d: "#ef5d40"
+			a: "#CE2BCC",
+			b: "#E12F83",
+			c: "#EB475D",
+			d: "#E05A3E"
 		},
 		ora_green: {
 			a: "#fe7507",

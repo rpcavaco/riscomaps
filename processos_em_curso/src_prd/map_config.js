@@ -106,6 +106,7 @@ var MAPCFG = {
 								"labelvalue": 2,
 								"strokecolor": "#40a3a3",
 								"fill": COLORRAMPS.RAMPS4X4.ora_green.c,
+								"fillopacity": 0.9,
 								"linewidth": 1
 							}
 						},
@@ -118,6 +119,7 @@ var MAPCFG = {
 								"labelvalue": 3,
 								"strokecolor": "#40a3a3",
 								"fill": COLORRAMPS.RAMPS4X4.ora_green.b,
+								"fillopacity": 0.9,
 								"linewidth": 1
 							}
 						},
@@ -128,6 +130,7 @@ var MAPCFG = {
 							"style": {
 								"labelkey": "PEC_ALV_GT",
 								"fill": COLORRAMPS.RAMPS4X4.ora_green.a,
+								"fillopacity": 0.9,
 								"linewidth": 1
 							}
 						}
@@ -140,7 +143,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_entrada": {
@@ -177,6 +180,7 @@ var MAPCFG = {
 								"labelvalue": 2,
 								"strokecolor": "#40a3a3",
 								"fill": COLORRAMPS.RAMPS4X4.mag_ora.c,
+								"fillopacity": 0.8,
 								"linewidth": 1
 							}
 						},
@@ -189,6 +193,7 @@ var MAPCFG = {
 								"labelvalue": 3,
 								"strokecolor": "#40a3a3",
 								"fill": COLORRAMPS.RAMPS4X4.mag_ora.b,
+								"fillopacity": 0.8,
 								"linewidth": 1
 							}
 						},
@@ -199,6 +204,7 @@ var MAPCFG = {
 							"style": {
 								"labelkey": "PEC_ENT_GT",
 								"fill": COLORRAMPS.RAMPS4X4.mag_ora.a,
+								"fillopacity": 0.8,
 								"linewidth": 1
 							}
 						}
@@ -211,7 +217,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_lot": {
@@ -258,7 +264,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"pec_sru": {
@@ -298,7 +304,7 @@ var MAPCFG = {
 			"label": {
 			},
 			"scalelimits": {
-				"top": 30000
+				"top": 10000
 			}
 		},						
 		"IMG16": {
@@ -357,11 +363,11 @@ var MAPCFG = {
 					"stroke": "#3A3A3A", 
 					"placementtype": "ALONG",
 					"baseline": "MIDDLE",
-					"bgstyle": "rgba(255, 255, 255, 0.5)",
-					"scalelimits": {
-						"top": 39900
-					}
+					"bgstyle": "rgba(255, 255, 255, 0.5)"
 				},
+			},
+			"scalelimits": {
+				"top": 10000
 			},
 			"index": {
 				"name": "TOPO_IX",

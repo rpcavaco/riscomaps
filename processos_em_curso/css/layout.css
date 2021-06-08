@@ -207,6 +207,17 @@ body,
   padding-top: 4px;
 }
 
+.tooltip-right[data-tooltip]:before {
+	position: absolute;
+	right: -230px;
+	top: 50%;
+	background-image:url('data:image/svg+xml;charset=utf-8,%3Csvg viewBox=%220 0 200 24%22 xmlns=%22http://www.w3.org/2000/svg%22%3E %3Cpath fill=%22hsla(0, 0%, 20%, 0.9)%22 stroke=%22white%22 stroke-width=%221%22 stroke-linejoin=%22round%22 d=%22M 2,2 l 6,6 v 14 h 190 v -20 z%22 /%3E%3C/svg%3E');
+	background-repeat: no-repeat;
+	height: 24px;
+	width: 200px;
+	padding-top: 4px;
+  }
+
 /* tooltip content */
 [data-tooltip]:before {
   color: #fff;
@@ -225,8 +236,17 @@ body,
   opacity: 1;
 }
 
+#gridivtitle {
+	font-size: 20px;
+	margin-bottom: 0;
+}
+
 #qrythemelbl {
 	display: none;
+	margin-top: 0;
+	margin-bottom: 0;
+	font-size: 20px;
+	font-family: Regular-Bold;
 }
 
 #gridDiv {
@@ -469,6 +489,16 @@ body,
     top: 12px;
 }
 
+#help_icon {
+    position: absolute;
+	z-index: 50;
+	top: 130px;
+	left: 14px;
+	width: 28px;
+	padding: 0;
+	cursor: pointer;
+}
+
 #loc_content input {
     box-sizing: border-box;
     -moz-box-sizing: border-box;
@@ -547,6 +577,7 @@ body,
 	z-index: 1000;
 	text-align: left;
 	box-shadow: 0 3px 14px rgba(0,0,0,0.6);
+	overflow-y: auto;
 }
 
 #msgsdiv img {

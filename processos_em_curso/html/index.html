@@ -47,6 +47,8 @@
 	<div id="msgsdiv" class="semi-square" style="display: none;">
 	</div>
 
+	<img id="help_icon" src="media/q-32-wh.png"/>
+
 	<div id="sourcetag">
 2021 CM-Porto / Dados: DM Gestão Urbanística, dev: DM Sistemas Informação / Portugal Imagery PT-TM06
 	</div>
@@ -54,7 +56,7 @@
 	<div>
 		<!-- Autocomplete -->
 		<div id="loc_content">
-			<input id="loc_inputbox" type="text" style="visibility: hidden" autocomplete="off">
+			<input id="loc_inputbox" type="text" style="visibility: hidden" autocomplete="off" placeholder="Topónimo, morada ou documento">
 			<div style="visibility: hidden" id="loc_cleansearchbtn" class="semi-square">Limpar</div>
 			<div style="display: none;" id="loc_resultlistarea">
 			</div>
@@ -96,14 +98,13 @@
 
 	<div id="gridDivContainer" style="visibility: hidden">
 		<div id="gridDiv">
-			<img id="help_icon" src="media/q-32-wh.png" />
-				<h2>Processos urbanísticos em curso</h2>
-				<h3 id="qrythemelbl"></h3>
-				<div id="inimsg">
-					<p id="zoominmsg">Faça 'zoom in' para ver polígonos e locais de licenciamento SRU.</p>
-					<p id="mainmsg">Faça click num polígono ou local de licenciamento SRU para saber quais os processos em curso no mesmo.</p>
-				</div>
-				<div id="queryResults"></div>
+			<p id="gridivtitle">Processos urbanísticos em curso</p>
+			<p id="qrythemelbl"></p>
+			<div id="inimsg">
+				<p id="zoominmsg">Faça 'zoom in' para ver polígonos e locais de licenciamento SRU.</p>
+				<p id="mainmsg">Faça click num polígono ou local de licenciamento SRU para saber quais os processos em curso no mesmo.</p>
+			</div>
+			<div id="queryResults"></div>
 			<!-- <button id="clearButton" class="esri-component esri-widget">Limpar</button> -->
 		</div>
 	</div>

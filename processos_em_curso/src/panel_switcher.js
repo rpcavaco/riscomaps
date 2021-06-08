@@ -159,7 +159,6 @@ function RecordPanelSwitcher(p_divname) {
 	this.iterator_current_key = null,
 	this.rotator_current_key = null,
 	this.rotator_msg = "";
-	this.max_attrs_per_page = 20;
 	this.max_val_str_length = -1;
 	this.attr_cfg = {};
 	this.height_limits = [];
@@ -412,8 +411,7 @@ function RecordPanelSwitcher(p_divname) {
 		}
 		
 		this.results_div = resultsDiv;
-
-		this.results_div.style.height = p_heightv;
+		const max_attrs_per_page = Math.floor(p_heightv / 32.0);
 
 		while (this.results_div.firstChild) {
 			this.results_div.removeChild(this.results_div.firstChild);
@@ -497,9 +495,17 @@ function RecordPanelSwitcher(p_divname) {
 				switch (fmt) {
 					case 'epoch':
 						if (!isNaN(preval)) {
-						d = new Date(0);
-						d.setUTCSeconds(preval / 1000);
-						val = d.toLocaleDateString();
+							d = new Date(0);
+							d.setUTCSeconds(preval / 1000);
+							val = d.toLocaleDateString();
+						} else {
+							val = preval;
+						}
+						break;
+
+					case 'localized':
+						if (!isNaN(preval)) {
+							val = preval.toLocaleString();
 						} else {
 							val = preval;
 						}
@@ -516,7 +522,7 @@ function RecordPanelSwitcher(p_divname) {
 					}
 				}
 
-				if (pageDiv == null || attrs_per_page_cnt >= this.max_attrs_per_page) {	
+				if (pageDiv == null || attrs_per_page_cnt >= max_attrs_per_page ) {	
 					if (pageDiv) {
 						this.addPanel(reckey, pageDiv, pagekey);
 						pageNum++;
