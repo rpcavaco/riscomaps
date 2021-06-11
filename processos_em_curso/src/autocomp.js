@@ -3,7 +3,9 @@ function AC_checkInputTimer(p_acompleter) {
 	
 	p_acompleter.checkInputCnt = p_acompleter.checkInputCnt + 1;
 	
-	if (p_acompleter.checkInputCnt >= p_acompleter.maxCheckInputCnt) {
+	const cntlimit = p_acompleter.maxCheckInputCnt;
+	
+	if (p_acompleter.checkInputCnt >= cntlimit) {
 		p_acompleter.checkInputCnt = 0;
 		clearInterval(p_acompleter.checkInputTimerID);
 		p_acompleter.checkInputTimerID = null;
@@ -507,20 +509,27 @@ class AutoCompleter {
 					}
 
 					// Outras pesquisas ----------------------------
-					if (!p_this.altQueriesHandler(trimmed)) {
+					const isNotAltQuery = p_this.altQueriesHandler(trimmed);
+					/*if (!p_this.altQueriesHandler(trimmed)) {
 						finishEvent(evt);
 						return false;
+					}*/
+					// Final outras pesquisas ----------------------
+
+					if (!isNotAltQuery) {
+						p_this.clearMessagingWidgets();
+						(function(pp_this) {
+							pp_this.checkInputTimerID = setInterval(
+								function() { AC_checkInputTimer(pp_this); },
+								pp_this.inputTimerIntervalValue
+							);
+						})(p_this);
 					}
 
-					// Final outras pesquisas ----------------------
-                    (function(pp_this) {
-						pp_this.checkInputTimerID = setInterval(
-							function() { AC_checkInputTimer(pp_this); },
-							pp_this.inputTimerIntervalValue
-						);
-				    })(p_this);
-
 					console.assert(p_this.checkInputTimerID!=null, "this.checkInputTimerID NULO!");
+
+					finishEvent(evt);
+					return false;
 					
 				}
 			);
@@ -551,6 +560,11 @@ class AutoCompleter {
 	clearPublishingWidgets() {
 		// para implementar	em classe estendida
 		throw new Error("clearPublishingWidgets not implemented");	
+	}
+
+	clearMessagingWidgets() {
+		// para implementar	em classe estendida
+		throw new Error("clearMessagingWidgets not implemented");	
 	}
 
 	afterSearchExec(p_respobj) {

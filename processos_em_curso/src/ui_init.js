@@ -459,8 +459,13 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 
 	}*/
 
+	clearMessagingWidgets() {
+		MessagesController.hideMessage(false);
+	}
+
 	deleteHandler() {
 
+		MessagesController.hideMessage(false);
 		this.cleanSearch();
 
 		if (typeof QueryMgr != 'undefined') {
