@@ -209,6 +209,11 @@ var InteractionMgr = {
 		throw new Error("InteractionMgr.onBeforeMouseUp not implemented");	
 	},
 
+	onMouseChange: function() {
+		// para implementar
+		throw new Error("InteractionMgr.onMouseChange not implemented");	
+	},
+
 	zoomToSelection: function(opt_env, opt_lyr, opt_oid) {
 		// para implementar
 		throw new Error("InteractionMgr.zoomToSelection not implemented");	
@@ -234,8 +239,8 @@ var InteractionMgr = {
 	init: function() {		
 		(function(p_this) {
 
-			const inscreenspace = true;
-			let dlayer = 'temporary';
+
+			/*
 			
 			p_this.mousechange = function(p_map, x, y, layernames, findings, is_transient) {
 
@@ -328,13 +333,15 @@ var InteractionMgr = {
 				
 			};
 
+			*/
+
 			p_this.mouseup = function(p_map, x, y, layernames, findings) {
 				p_this.onBeforeMouseUp(p_map, x, y, layernames, findings);
-				p_this.mousechange(p_map, x, y, layernames, findings, false);
+				p_this.onMouseChange(p_map, x, y, layernames, findings, false);
 			};
 			
 			p_this.mousemove = function(p_map, x, y, layernames, findings) {
-				p_this.mousechange(p_map, x, y, layernames, findings, true);						
+				p_this.onMouseChange(p_map, x, y, layernames, findings, true);						
 			};
 			
 		})(this);

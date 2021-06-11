@@ -412,6 +412,105 @@ InteractionMgr.zoomToSelection = function(b_doinfo, opt_env, opt_lyr, opt_oid) {
 	this.activeMap.refreshFromMinMax(envArray[0], envArray[1], envArray[2], envArray[3]); 
 };
 
+InteractionMgr.onMouseChange = function(p_map, x, y, layernames, findings, is_transient) {
+
+	const inscreenspace = true;
+	let dlayer = 'temporary';
+
+	if (is_transient) {					
+		if (AutocompleteObjMgr.recordsAreaIsVisible(this.connected_autocomplete)) {
+			return;
+		}
+		dlayer = 'transient';
+		p_map.clearTransient();
+	} else {
+		dlayer = 'temporary';
+		p_map.clearTemporary();
+		p_map.unregisterOnDrawFinish("highlighttopo");
+
+		this.selection.lyr = null;
+		this.selection.oid = null;
+		this.selection.env = null;
+
+		AutocompleteObjMgr.showRecordsArea(this.connected_autocomplete, false);
+	}
+	
+	let feat, sty, lyr, oid, styles, qrykey, info_fields, info_values = [];
+	if (Object.keys(findings).length > 0 && layernames.length > 0) {
+					
+		for (let i=0; i<layernames.length; i++) {
+			
+			lyr = layernames[i];
+
+			oid = findings[lyr][0];
+			if (oid == null) {
+				continue;
+			}
+
+			feat = p_map.getFeature(lyr, oid);
+			if (feat) {
+				if (feat._styidx !== undefined) {
+					if (!p_map.style_visibility.isLyrTOCStyleVisibile(feat._styidx)) {
+						continue;
+					}
+				}
+			}
+			
+			if (this.highlightStyles.hasOwnProperty(lyr)) {
+				styles = this.highlightStyles[lyr];
+			} else if (this.highlightStyles.hasOwnProperty("ALL")) {
+				styles = this.highlightStyles["ALL"];
+			} else {
+				console.warn("highlightStyles has no config for layer '"+lyr+"' or ALL.");
+				continue;
+			}
+			
+			if (is_transient) {                  
+				sty = styles.transient;
+			} else {							
+				sty = styles.temporary;
+				this.infoQuery(lyr, feat);
+			}
+
+			p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, false, null, false);
+
+			if (!is_transient) {
+
+				this.selection.lyr = lyr;
+				this.selection.oid = oid;
+				
+				// redesenhar sempre que houver refresh, enquanto a selecção se mantiver
+				(function(p_intmgr, pp_map) {
+					pp_map.registerOnDrawFinish("highlight_features",
+						function (the_mapctrl, p_item) {
+							if (p_item != 'normal') {
+								return;
+							}
+							the_mapctrl.drawSingleFeature(p_intmgr.selection.lyr, p_intmgr.selection.oid, inscreenspace, dlayer, sty, false, null, false);
+						},
+						false // opt_noclobber
+					);	
+				})(this, p_map);
+			}
+			
+			
+			// uma só layer
+			break;
+		}
+		
+	}
+	
+	// se nada for encontrado
+	if (!is_transient && this.selection.oid == null) {
+		p_map.unregisterOnDrawFinish("highlight_features");
+	}
+
+	
+};
+
+
+
+
 // ----------------------------------------------------------------------------
 // Final "extend / customize managers"
 // ============================================================================
