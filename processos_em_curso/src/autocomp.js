@@ -515,8 +515,9 @@ class AutoCompleter {
 						return false;
 					}*/
 					// Final outras pesquisas ----------------------
+					console.log("isNotAltQuery:", isNotAltQuery);
 
-					if (!isNotAltQuery) {
+					if (isNotAltQuery) {
 						p_this.clearMessagingWidgets();
 						(function(pp_this) {
 							pp_this.checkInputTimerID = setInterval(
