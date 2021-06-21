@@ -1,0 +1,118 @@
+<!DOCTYPE html> 
+<html lang="en"> 
+
+<head> 
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1,user-scalable=no">
+
+
+	<title>Processos em curso</title> 
+	<meta name="description" content="CM-Porto - Operações urbanísticas - processos de licenciamento em curso"> 
+	<meta name="author" content="CM-Porto, DMGU + DMSI-SIG"> 
+
+	<link href='shortcut icon' rel='media/fcmp.png' />
+	<link href='media/fcmp.png' rel='icon' type='image/png' />
+	
+    <link rel="stylesheet" href="css/mapctrls.css">
+    <link rel="stylesheet" href="css/layout.css">
+
+    <!-- <link rel="stylesheet" href="css/layout.css"/> -->
+
+	<script src="js/basics.js"></script>
+	<script src="js/cfg.js"></script>
+	<script src="js/colorramps.js"></script>
+
+	<script src="riscojs/canvasctrl.js"></script>
+	<script src="riscojs/geom.js"></script>
+	<script src="riscojs/labelengine.js"></script>
+	<script src="riscojs/m3math.js"></script>
+	<script src="riscojs/mapcontroller.js"></script>
+	<script src="riscojs/mapcontrols.js"></script>
+	<script src="riscojs/mapctrllergeomgen.js"></script>
+	<script src="riscojs/mapctrllerhelpers.js"></script>
+	<script src="riscojs/spindex.js"></script>
+	
+	<script src="js/panel_switcher.js"></script>
+	<script src="js/managers.js"></script>
+	<!-- <script src="js/when_view_ready.js"></script> -->
+	<script src="js/autocomp.js"></script>
+
+</head> 
+<body> 
+	<div id="logofloater" style="visibility: hidden;">
+		<img id="logo" src="media/splash-logo.png"/>
+		<div id="logotxt">Gestão de <br />Operações<br />Urbanísticas</div>
+	</div>
+
+	<div id="msgsdiv" class="semi-square" style="display: none;">
+	</div>
+
+	<img id="help_icon" src="media/q-32-wh.png"/>
+
+	<div id="sourcetag">
+	</div>
+
+	<div>
+		<!-- Autocomplete -->
+		<div id="loc_content">
+			<input id="loc_inputbox" type="text" style="visibility: hidden" autocomplete="off" placeholder="Topónimo, morada ou documento">
+			<div style="visibility: hidden" id="loc_cleansearchbtn" class="semi-square">Limpar</div>
+			<div style="display: none;" id="loc_resultlistarea">
+			</div>
+		</div>
+	</div>
+
+	<div id="viewDiv">
+	</div>
+
+	<div id="legDivCloser" class="closed unselectable">
+	</div>
+	
+	<div id="legendctrl" style="visibility: hidden">
+		<div id="legend_container">			
+			<table>
+				<tr>
+					<td>
+						<p class="visctrl-h1">Leg....</p>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div id="indicators">
+		
+		<div id="sclvaldiv">
+			Escala <span id="sclval">9:9999</span>
+		</div>
+
+		<div id="mouseposdiv">
+			
+		</div>
+		
+	</div>
+
+	<div id="gridDivCloser" class="opened unselectable" style="visibility: hidden">
+	</div>
+
+	<div id="gridDivContainer" style="visibility: hidden">
+		<div id="gridDiv">
+			<p id="gridivtitle">Processos urbanísticos em curso</p>
+			<p id="qrythemelbl"></p>
+			<div id="inimsg">
+				<p id="zoominmsg">Faça 'zoom in' para ver polígonos e locais de licenciamento SRU.</p>
+				<p id="mainmsg">Faça click num polígono ou local de licenciamento SRU para saber quais os processos em curso no mesmo.</p>
+			</div>
+			<div id="queryResults"></div>
+			<!-- <button id="clearButton" class="esri-component esri-widget">Limpar</button> -->
+		</div>
+	</div>
+	<img id="loading" src="media/816.gif"  style="visibility: hidden"/>
+
+	<script src="js/map_config.js"></script>
+	<script src="js/loc_interop.js"></script>
+	<script src="js/ui_init.js"></script>
+	<script src="js/map_init.js"></script>
+
+</body> 
+</html> 
