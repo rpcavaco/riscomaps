@@ -69,7 +69,7 @@ var MAPCFG = {
 		}
 	},
 	"baseurl": "https://munisig.cm-porto.pt/riscobdt",
-	"baseraster": "IMG16",
+	"baseraster": "DGT_2018",
 	"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
 	"rasternames": [],
 	"lconfig": {
@@ -106,7 +106,7 @@ var MAPCFG = {
 								"labelvalue": 2,
 								"strokecolor": "#40a3a3",
 								"fill": COLORRAMPS.RAMPS4X4.ora_green.c,
-								"fillopacity": 0.9,
+								"fillopacity": 0.7,
 								"linewidth": 1
 							}
 						},
@@ -309,6 +309,10 @@ var MAPCFG = {
 		},						
 		"IMG16": {
 			"rasterbaseurl": "/img16",
+			"filterfunc": "toGrayScaleImgFilter"
+		},	
+		"DGT_2018": {
+			"rasterbaseurl": "/orto2018",
 			"filterfunc": "toGrayScaleImgFilter"
 		},	
 		"NPOLPROJ": {

@@ -83,7 +83,7 @@ var SCALE_LIMIT_FUNCS = [
 	}
 ];
 
-var ATTR_TEXT = "2021 CM-Porto / Dados: DM Gestão Urbanística, dev: DM Sistemas Informação / PT-TM06";
+var ATTR_TEXT = "2021 CM-Porto / Dados: DM Gestão Urbanística, dev: DM Sistemas Informação / Orto 2018 DGT PT-TM06";
 var ATTR_TEXT_MIN = "2021 CM-Porto";
 
 var INITIAL_ANIM_MSECS = 2500;

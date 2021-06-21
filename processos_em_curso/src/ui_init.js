@@ -767,7 +767,17 @@ function sizeWidgets() {
 			}
 		} 
 
-	}		
+	}	
+	
+	wdg = document.getElementById("sourcetag"); 
+	if (wdg) {
+		if (mode > 1) {
+			wdg.innerText = ATTR_TEXT;
+		} else {
+			wdg.innerText = ATTR_TEXT_MIN;
+		}				
+	}
+	
 }
 
 //** Config ** inclui config
