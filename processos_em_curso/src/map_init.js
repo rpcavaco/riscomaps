@@ -83,13 +83,14 @@ function check_oktopick(p_map)
 (function() {
 
 	//** Config **
-	let map = MapsMgr.addMap("main", 'viewDiv', MAPCFG);
-	let ac = AutocompleteObjMgr.get("geocode");
+	MapsMgr.addMap("main", 'viewDiv', MAPCFG);
+	/* let ac = AutocompleteObjMgr.get("geocode");
 	ac.setMap(map);
 	// raio para fazer fit a circulo em volta de local seleccionado, quando não existe retângulo da área seleccionada.
 	ac.setZoomRadius(120);
 	InteractionMgr.addMap(map);
 	QueryMgr.addMap(map);
+*/
 
 	MapsMgr.registerOnDrawFinish("main", "default_drawfinish",
 		function (the_mctrl, p_item) {
@@ -143,6 +144,12 @@ function check_oktopick(p_map)
 				setCookie("risco_terrain_center", cen[0] + "_" + cen[1] + "; SameSite=Strict; max-age=259200");
 				setCookie("risco_mapscale", scl + "; SameSite=Strict; max-age=259200");			
 				setCookie("risco_vizlrs", vizlyrs_str + "; SameSite=Strict; max-age=259200");			
+			}
+		);
+
+		the_map.registerOnPanZoom(
+			function(p_map) {
+				hideShowZoominMsg(p_map.getScale());
 			}
 		);
 
