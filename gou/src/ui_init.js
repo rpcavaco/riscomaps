@@ -676,6 +676,19 @@ function hideLoaderImg() {
 	document.getElementById("loading").style.display = "none";	
 }
 
+
+function hideShowZoominMsg(p_sclval) {
+	const ref  = 10000, wdg = document.getElementById("zoominmsg");
+	if (wdg) {
+		if (p_sclval > ref) {
+			wdg.style.display = 'block';
+		} else {
+			wdg.style.display = 'none';
+		}
+	}
+};
+
+
 //** Config ** inclui config
 function sizeWidgets() {
 	
@@ -776,6 +789,11 @@ function sizeWidgets() {
 		} else {
 			wdg.innerText = ATTR_TEXT_MIN;
 		}				
+	}
+
+	if (MapsMgr) {
+		const map = MapsMgr.getActive();
+		hideShowZoominMsg(map.getScale());
 	}
 	
 }
@@ -1186,6 +1204,12 @@ var gridDivViz = {
 
 function init_ui() {
 
+	//** Config **
+	const map = MapsMgr.get("main");
+	// raio para fazer fit a circulo em volta de local seleccionado, quando não existe retângulo da área seleccionada.
+	InteractionMgr.addMap(map);
+	QueryMgr.addMap(map);
+	
 	// ** CONFIG **
 	const srid = 3763; // Necessária esta config aqui, porque o SRID do mapa é definido em base de dados
 	AutocompleteObjMgr.add(new Geocode_LocAutoCompleter(AJAX_ENDPOINTS.locqry, srid, 
@@ -1198,6 +1222,9 @@ function init_ui() {
 	));
 
 	AutocompleteObjMgr.bindEventHandlers();
+	const ac = AutocompleteObjMgr.get("geocode");
+	ac.setMap(map);
+	ac.setZoomRadius(120);
 
 	// mouse click sobre a mensagem flutuante fecha-a
 	attEventHandler('msgsdiv', 'click',

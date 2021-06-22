@@ -70,19 +70,6 @@ var RECORD_PANELS_CFG = {
 	}
 };
 
-var SCALE_LIMIT_FUNCS = [
-	function(p_zoomval) {
-		const ref  = 30000, wdg = document.getElementById("zoominmsg");
-		if (wdg) {
-			if (p_zoomval > ref) {
-				wdg.style.display = 'block';
-			} else {
-				wdg.style.display = 'none';
-			}
-		}
-	}
-];
-
 var ATTR_TEXT = "2021 CM-Porto / Dados: DM Gestão Urbanística, dev: DM Sistemas Informação / Orto 2018 DGT PT-TM06";
 var ATTR_TEXT_MIN = "2021 CM-Porto";
 
