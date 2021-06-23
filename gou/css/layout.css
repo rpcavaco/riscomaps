@@ -68,8 +68,8 @@ body,
 	top: 16px;
 	z-index: 20;
 	padding: 2px 8px 5px 8px;
-	width: 260px;
-	height: 300px;
+	width: 180px;
+	height: 240px;
 	border-top-left-radius: 6px;
 	border-bottom-left-radius: 6px;
 }
@@ -131,6 +131,10 @@ body,
 
 .visctrl-label {
 	float: left;
+}
+
+.visctrl-label:not(.visctrl-entry .visctrl-label) {
+	padding-left: 14px;
 }
 
 .visctrl-nofeats {
@@ -259,6 +263,7 @@ body,
 	bottom: 30px;
 	width: 485px;
 	box-shadow: 0 3px 8px rgba(0,0,0,0.6);
+	overflow-y: auto;
 }
 
 #gridDiv img {

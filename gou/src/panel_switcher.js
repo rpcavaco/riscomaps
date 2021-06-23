@@ -60,23 +60,32 @@ function SwitchingPanelCollection(p_collname) {
 		return true;
 	};
 	this.activatePanel = function(p_panel_key) {
+		let pnl;
 		if (this._findPanel(p_panel_key) == null) {
 			console.error("SwitchingPanelCollection - activatePanel, missing panel: %s", p_panel_key);
 			return false;
 		}
 		for (let k in this.panels) {
+			pnl = this._findPanel(k);
+			if (pnl == null) {
+				throw new Error("activatePanel, panel key not found:"+k);
+			}
 			if (k == p_panel_key) {
-				this._findPanel(k).setVisible(true);
+				pnl.setVisible(true);
 				this.active_panel = this._findPanel(k);
 			} else {
-				this._findPanel(k).setVisible(false);
+				pnl.setVisible(false);
 			}
 		}
 		return true;
 	};
 	this.hideAllPanels = function() {
 		for (let k in this.panels) {
-			this._findPanel(k).setVisible(false);
+			pnl = this._findPanel(k);
+			if (pnl == null) {
+				throw new Error("hideAllPanels, panel key not found:"+k);
+			}
+			pnl.setVisible(false);
 		}
 		return true;
 	};
@@ -159,7 +168,7 @@ function RecordPanelSwitcher(p_divname) {
 	this.iterator_current_key = null,
 	this.rotator_current_key = null,
 	this.rotator_msg = "";
-	this.max_val_str_length = -1;
+	this.max_val_str_length = 40;
 	this.attr_cfg = {};
 	this.height_limits = [];
 	this.results_div = null;
@@ -186,9 +195,11 @@ function RecordPanelSwitcher(p_divname) {
 		if (this.recordorder.length > 0) {
 			this.records = {};
 			this.recordorder = [];
-			this.iterator_current_key = null;
 		}
-		
+	
+		this.iterator_current_key = null;
+		this.rotator_current_key = null;
+
 		while (this.results_div!=null && this.results_div.firstChild!=null) {
 			this.results_div.removeChild(this.results_div.firstChild);
 		}
@@ -404,6 +415,8 @@ function RecordPanelSwitcher(p_divname) {
 			return;
 		}
 
+		const lheight = 33;
+
 		const resultsDiv = document.getElementById(this.the_div_name);
 		if (resultsDiv == null) {
 			console.warn("RecordPanelSwitcher: generatePanels, parent div not found:", this.the_div_name);
@@ -411,19 +424,36 @@ function RecordPanelSwitcher(p_divname) {
 		}
 		
 		this.results_div = resultsDiv;
-		const max_attrs_per_page = Math.floor(p_heightv / 32.0);
+		const max_attrs_per_page = Math.floor(p_heightv / lheight);
 
 		while (this.results_div.firstChild) {
 			this.results_div.removeChild(this.results_div.firstChild);
 		}
+
+		this.clear();
 
 			// abrir espaço para inserir botões de navegação entre registos
 		const navDiv = document.createElement("div");
 		this.results_div.appendChild(navDiv);
 		navDiv.setAttribute("class", "navdiv");
 
-
 		if (p_records.length>1) {
+
+			let rec, attrcnt, maxattrcnt = 0;
+
+			for (let i=0; i<p_records.length; i++) {
+				rec = p_records[i];
+				attrcnt = Object.keys(rec).length;
+				if (attrcnt > maxattrcnt) {
+					maxattrcnt = attrcnt;
+				}
+			}
+
+			if (maxattrcnt > max_attrs_per_page) {
+				maxattrcnt = max_attrs_per_page;
+			}
+
+			resultsDiv.parentNode.style.height = (maxattrcnt * lheight) + "px";
 
 			const navInnerDiv = document.createElement("div");
 			navDiv.appendChild(navInnerDiv);
@@ -470,7 +500,7 @@ function RecordPanelSwitcher(p_divname) {
 		}
 
 		let parentEl, reckey, pagekey, pageNum, liEl, pageDiv, pgNavDiv, attrs_per_page_cnt;
-		let lbl, fmt, preval, val, d;
+		let lbl, fmt, preval, val, d, fmtdict;
 
 		for (let i=0; i<p_records.length; i++) {
 						
@@ -485,13 +515,24 @@ function RecordPanelSwitcher(p_divname) {
 			
 			for (let fld in this.attr_cfg) {
 
+				if (!this.attr_cfg.hasOwnProperty(fld)) {
+					continue;
+				}
+
 				lbl = this.attr_cfg[fld][0];
 				fmt = this.attr_cfg[fld][1];
 				preval = p_records[i][fld];
 
+				if (this.attr_cfg[fld].length == 3) {
+					fmtdict = this.attr_cfg[fld][2];
+				} else {
+					fmtdict = null;
+				}
+
 				if (preval == null || preval.length==0) {
 					continue;
 				}
+
 				switch (fmt) {
 					case 'epoch':
 						if (!isNaN(preval)) {
@@ -511,13 +552,17 @@ function RecordPanelSwitcher(p_divname) {
 						}
 						break;
 
+					case 'splitcommas':
+						val = preval.split(":").join(" "); 
+						break;
+
 					default:
 						val = preval;
 				}
 
 				if (this.max_val_str_length > 5) {
 					let strval = val.toString();
-					if (strval.length > this.max_val_str_length) {
+					if (strval.length > this.max_val_str_length && (strval.indexOf(" ") < 0 || strval.indexOf(" ") >  this.max_val_str_length)) {
 						val = strval.substring(0, this.max_val_str_length-3) + '...';
 					}
 				}
@@ -551,6 +596,13 @@ function RecordPanelSwitcher(p_divname) {
 				//spEl.setAttribute("style", "float: right");
 				spEl.textContent = val;
 				liEl.appendChild(spEl);
+
+				if (fmtdict) {
+					if (fmtdict[val.toLowerCase()] !== undefined) {
+						spEl.style.backgroundColor = fmtdict[val.toLowerCase()];
+					}
+
+				}
 
 				attrs_per_page_cnt++;
 			}

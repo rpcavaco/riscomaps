@@ -175,7 +175,11 @@ function addrHighlightAnimator(p_mapctrl, p_cod_topo, p_npol, p_marker_coords) {
 // Extend / customize managers
 // ----------------------------------------------------------------------------
 
+
 // Customização comportamento caixa de vista de registos alfa
+RecordsViewMgr.customClear = function() {
+};
+
 RecordsViewMgr.show = function(p_key, p_payload) {
 
 	// esconder msg introdutória
@@ -186,10 +190,7 @@ RecordsViewMgr.show = function(p_key, p_payload) {
 	const qtl = document.getElementById("qrythemelbl");
 
 	const labels = {
-		"main_naolot_info": "Alvarás de obras em curso",
-		"main_entrada_info": "Operações urbanísticas em curso",
-		"main_lot_info": "Alvarás de loteamento em curso",
-		"main_sru_info": "Alvarás de obras SRU em curso"
+		"main_procgou_info": "Processos"
 	};
 
 	if (Object.keys(labels).indexOf(p_key) >= 0) {
@@ -208,11 +209,8 @@ QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) 
 	let rows;
 
 	const keys = {
-		"pec_findbydoc_qry": [null,"bydocqry"],
-		"pec_naolot_info": ["pec_naolot_codsig", "main_naolot_info"],
-		"pec_entrada_info": ["pec_entrada_codsig", "main_entrada_info"],
-		"pec_lot_info": ["pec_lot_codsig", "main_lot_info"],
-		"pec_sru_info": ["pec_sru_codsig", "main_sru_info"],
+		"VG_LOTESGOU_info": ["VA_LOTESGOU", "main_procgou_info"],
+		"ALV_SRU_info": ["VA_ALV_SRU", "main_procgou_info"]
 	};
 
 	if (keys[p_qrykey] !== undefined) {
@@ -274,6 +272,8 @@ QueryMgr.clearResults = function() {
 	if (mainmsgDiv) {
 		mainmsgDiv.style.display = "block";
 	}	
+
+
 }
 
 // Nome do 'autocomplete relacionado' para que as interações rato / toque com o mapa limpem a 
@@ -282,10 +282,8 @@ InteractionMgr.connected_autocomplete = 'geocode';
 
 // Campos a usar na operação INFO (InteractionMgr.mousechange), por layer com info ativo
 InteractionMgr.info_key_fields = {
-	"pec_naolot": ["cod_sig"],
-	"pec_entrada": ["cod_sig"],
-	"pec_lot": ["cod_sig"],
-	"pec_sru": ["cod_sig"]
+	"VG_LOTESGOU": ["cod_sig"],
+	"ALV_SRU": ["cod_sig"]
 };
 
 var TMPHighLight = {
@@ -437,10 +435,16 @@ InteractionMgr.onMouseChange = function(p_map, x, y, layernames, findings, is_tr
 	
 	let feat, sty, lyr, oid, styles, qrykey, info_fields, info_values = [];
 	if (Object.keys(findings).length > 0 && layernames.length > 0) {
-					
-		for (let i=0; i<layernames.length; i++) {
+
+		const ordered_layers_to_check = ["GOU_OVER", "ALV_SRU", "VG_LOTESGOU"];
+
+		for (let i=0; i<ordered_layers_to_check.length; i++) {
+
+			if (layernames.indexOf(ordered_layers_to_check[i]) < 0) {
+				continue;
+			} 
 			
-			lyr = layernames[i];
+			lyr = ordered_layers_to_check[i];
 
 			oid = findings[lyr][0];
 			if (oid == null) {
@@ -469,11 +473,14 @@ InteractionMgr.onMouseChange = function(p_map, x, y, layernames, findings, is_tr
 				sty = styles.transient;
 			} else {							
 				sty = styles.temporary;
-				this.infoQuery(lyr, feat);
+
+				//if (["<layers do pdm>"].indexOf(lyr) >= 0) {
+					this.infoQuery(lyr, feat);
+				//}
+				
 			}
 
 			p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, false, null, false);
-
 			if (!is_transient) {
 
 				this.selection.lyr = lyr;
@@ -492,9 +499,8 @@ InteractionMgr.onMouseChange = function(p_map, x, y, layernames, findings, is_tr
 					);	
 				})(this, p_map);
 			}
-			
-			
-			// uma só layer
+
+			// um só layer
 			break;
 		}
 		

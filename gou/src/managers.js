@@ -89,47 +89,9 @@ var QueryMgr = {
 		
 };
 
-var LayervizMgr = {
-	mode: null,
-	layerItems: {},
-	set: function(p_key, p_value) {
-		this.layerItems[p_key] = p_value;
-	},
-	changeVisibilty(p_this_layerid, p_visible, opt_do_change) {
-		if (this.mode == 'radiobutton') {
-			for (let lyrId in this.layerItems) {
-				if (p_visible) {
-					if (lyrId != p_this_layerid && this.layerItems[lyrId].visible) {
-
-						this.layerItems[lyrId].visible = false;
-						this.layerItems[lyrId].panel.open = false;
-						this.layerItems[p_this_layerid].panel.open = true;
-
-						if (typeof LayerInteractionMgr != 'undefined') {
-							LayerInteractionMgr.select(p_this_layerid);
-						}
-					}
-				}
-			}
-		}
-		if (opt_do_change) {
-			this.layerItems[p_this_layerid].visible = p_visible;
-			this.layerItems[p_this_layerid].panel.open = p_visible;
-		}
-	},
-	init: function() {		
-		if (typeof LAYERVIZ_MODE != 'undefined') {
-			this.mode = LAYERVIZ_MODE;
-		}
-	}
-};
-
-(function() {
-	LayervizMgr.init();
-})();
-
 var RecordsViewMgr = {
 	panels: {},
+	the_divname: null,
 	init: function() {
 		let cfg;
 		for (let k in RECORD_PANELS_CFG) {
@@ -137,10 +99,10 @@ var RecordsViewMgr = {
 			if (cfg["type"] == 'switcher') {
 				this.panels[k] = new RecordPanelSwitcher(cfg["the_div"]);
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
-				this.panels[k].rotator_msg = cfg["rotator_msg"];
 				this.panels[k].attr_cfg = cfg["attr_cfg"];
 			}
 		}
+		this.the_divname = cfg["the_div"];
 	},
 	_get: function(p_key) {
 		if (this.panels[p_key] === undefined) {
@@ -150,6 +112,10 @@ var RecordsViewMgr = {
 	},
 	clear: function(p_key) {
 		this._get(p_key).clear();
+		const wdg = document.getElementById(this.the_divname);
+		if (wdg!=null && wdg.parentNode!=null) {
+			wdg.parentNode.style.removeProperty("height");
+		}
 	},
 	_valcount: function(p_key, p_rows) {
 		let maxcnt=0, valcount;
@@ -157,6 +123,9 @@ var RecordsViewMgr = {
 		for (let i=0; i<p_rows.length; i++) {  
 			valcount = 0;
 			for (let fld in attr_cfg) {
+				if (!attr_cfg.hasOwnProperty(fld)) {
+					continue;
+				}
 				let preval = p_rows[i][fld];
 				if (preval == null || preval.length==0) {
 					continue;

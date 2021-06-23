@@ -60,26 +60,6 @@ var MapsMgr = {
 	}
 };
 
-function check_oktopick(p_map) 
-{									
-	var sclv = p_map.getScale();
-	
-	if (sclv < PICKLOCATION_SCALELIMITS.min || sclv > PICKLOCATION_SCALELIMITS.max)
-	{
-		if (sclv < PICKLOCATION_SCALELIMITS.min) {
-			MessagesController.setMessage(MsgCtrl.getMsg("ZOOMMINSCL")+PICKLOCATION_SCALELIMITS.min, "INFO");
-		}
-
-		if (sclv > PICKLOCATION_SCALELIMITS.max) {
-			MessagesController.setMessage(MsgCtrl.getMsg("ZOOMMAXSCL")+PICKLOCATION_SCALELIMITS.max, "INFO");
-		}
-
-		return false;
-	}
-
-	return true;
-}
-
 (function() {
 
 	//** Config **
@@ -95,6 +75,9 @@ function check_oktopick(p_map)
 	MapsMgr.registerOnDrawFinish("main", "default_drawfinish",
 		function (the_mctrl, p_item) {
 			if (p_item == 'normal') {
+				if (typeof LegendViz != 'undefined') {
+					LegendViz.enforce();
+				}
 				//NPolHighlighter.doHighlightMarked();
 			}
 			if (p_item != 'localdraw' && MapsMgr.general_logging_on) {

@@ -133,6 +133,10 @@ body,
 	float: left;
 }
 
+.visctrl-label:not(.visctrl-entry .visctrl-label) {
+	padding-left: 10px;
+}
+
 .visctrl-nofeats {
 	color: #909090;
 }

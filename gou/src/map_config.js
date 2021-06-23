@@ -1,5 +1,5 @@
 var MAPCFG = {
-	"mapname": "gou_pec",	
+	"mapname": "gou",	
 	"bgcolor": "#f9f4f9",
 	"scale": 5000.0 , 
 	"terrain_center": [-40094.0,164608.0],
@@ -12,15 +12,14 @@ var MAPCFG = {
 	"i18n_text": {
 		"pt": {
 			"LEG": "Legenda",
-			"PEC_NAOLOT": "Alvarás de obras em curso",
+			"OVERLAP": "Sobreposição",
+			"GAP": "Lacuna",
+			"TOPOERRORS": "Anomalias topologia",
+			"LOTESGOU": "Lotes GOU",
+			"GOU": "Processos",
+			"ALV_SRU": "Alvarás SRU",
 			"PEC_ALV_FMT": ["1 alvará", "{0} alvarás"],
-			"PEC_ALV_GT": "3 alvarás ou mais",
-			"PEC_ENT": "Operações urbanísticas em curso",
-			"PEC_ENT_FMT": ["1 processo", "{0} processos"],
-			"PEC_ENT_GT": "3 processos ou mais",
-			"PEC_LOT": "Alvarás de loteamento em curso",
-			"PEC_SRU": "Alvarás de obras SRU em curso",
-			"PEC_SRU_GT": ["", "{0} alvarás ou mais"],
+			"PEC_SRU_GT": ["", "{0} alvarás ou mais"]
 		}
 	},
 	"controlssetup": {
@@ -52,225 +51,122 @@ var MAPCFG = {
 		},
 		"widget_hiding_during_refresh_mgr": "LegendViz",
 		"toollayeractions": {
-			"picker": {			
+			"picker": {
 				"mousemove": {
-					"pec_naolot": "InteractionMgr.mousemove",
-					"pec_entrada": "InteractionMgr.mousemove",
-					"pec_lot": "InteractionMgr.mousemove",
-					"pec_sru": "InteractionMgr.mousemove",
+					"VG_LOTESGOU": "InteractionMgr.mousemove",
+					"ALV_SRU": "InteractionMgr.mousemove"
 				},
 				"mouseup": {
-					"pec_naolot": "InteractionMgr.mouseup",
-					"pec_entrada": "InteractionMgr.mouseup",
-					"pec_lot": "InteractionMgr.mouseup",
-					"pec_sru": "InteractionMgr.mouseup",
+					"GOU_OVER": "InteractionMgr.mouseup",
+					"VG_LOTESGOU": "InteractionMgr.mouseup",
+					"ALV_SRU": "InteractionMgr.mouseup"
 				}							
 			}
 		}
 	},
-	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
+	"baseurl": "https://marselha.cm-porto.net/riscosrv_v2bdt_dev",
 	"baseraster": "DGT_2018",
-	"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
+	"lnames": [ "ALV_SRU", "GOU_OVER",  "VG_LOTESGOU", "EV","NPOLPROJ"],
 	"rasternames": [],
 	"lconfig": {
-		"pec_naolot": {
-			"name": "Alvarás em curso",
-			"labelkey": "PEC_NAOLOT",
+		"VG_LOTESGOU": {
+			"name": "View GOU",
+			"visible": true,
+			"labelkey": "GOU",
+			/* "thematic_control": "thematic_widget", */
 			"condstyle": {
 				"default": {
 					"strokecolor": "#ff5e32ff",  
-					"linewidth": 1,	
-					"fill": "rgba(204, 204, 204, 0.5)"
+					"linewidth": 2,	
+					"fill": "rgba(204, 204, 204, 0.5)",
 				},
-				"perattribute": {
-					"cnt": [
+				/*"perattribute": {
+					"_#ALL#_": [
 						{
-							"f": function(testval) {
-								return (testval == 1);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_FMT",
-								"labelvalue": 1,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.ora_green.d,	
-								"fillopacity": 0.7,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval == 2);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_FMT",
-								"labelvalue": 2,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.ora_green.c,
-								"fillopacity": 0.7,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval == 3);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_FMT",
-								"labelvalue": 3,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.ora_green.b,
-								"fillopacity": 0.9,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval > 3);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_GT",
-								"fill": COLORRAMPS.RAMPS4X4.ora_green.a,
-								"fillopacity": 0.9,
-								"linewidth": 1
-							}
+							"f": thematicsymb_GOU
 						}
-
-
 					]
-
-				}
+				}*/
 			},						
 			"label": {
+				"attrib": "cod_sig",
+				"style": {
+					"font": "15px Arial",
+					"placementtype": "CENTER",
+					"baseline": "MIDDLE",
+					"scalelimits": {
+						"top": 2000
+					},
+					"fill": "#ffa68e",
+					"shadowcolor": "#000",
+					"shadowoffsetx": 2,
+					"shadowoffsety": 2,
+					"shadowblur": 2,
+					"backgroundependent": {
+						"CART98": {
+							"shadowoffsetx": 1,
+							"shadowoffsety": 1,
+							"shadowblur": 1,
+							"fill": "#e2613fff"
+						}
+					}
+
+				}
 			},
 			"scalelimits": {
 				"top": 10000
+			},
+			"index": {
+				"name": "LGOU_IX",
+				"keys": ["GID"],
+				"items": ["OID"]
 			}
-		},						
-		"pec_entrada": {
-			"name": "Operações em curso",
-			"visible": false,
-			"labelkey": "PEC_ENT",
+		},
+		"GOU_OVER": {
+			"name": "Anomalias topologia",
+			"visible": true,
+			"labelkey": "TOPOERRORS",
 			"condstyle": {
 				"default": {
-					"strokecolor": "#ff5e32ff",  
-					"linewidth": 1,	
-					"fill": "rgba(204, 204, 204, 0.5)"
+					"strokecolor": "green",
+					"linewidth": 2,					
+					"fill": "rgba(0, 0, 255, 0.5)"
 				},
 				"perattribute": {
-					"cnt": [
+					"reltype": [
 						{
 							"f": function(testval) {
-								return (testval == 1);
-							},
+									return (testval.toLowerCase() == "overlap");
+								},
 							"style": {
-								"labelkey": "PEC_ENT_FMT",
-								"labelvalue": 1,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.mag_ora.d,	
-								"fillopacity": 0.7,
-								"linewidth": 1
+								"labelkey": "OVERLAP",
+								"strokecolor": "#00a8e6ff",
+								"fill": "#fff5e080",
+								"linewidth": 3
 							}
 						},
 						{
 							"f": function(testval) {
-								return (testval == 2);
-							},
+									return (testval.toLowerCase() == "gap");
+								},
 							"style": {
-								"labelkey": "PEC_ENT_FMT",
-								"labelvalue": 2,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.mag_ora.c,
-								"fillopacity": 0.8,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval == 3);
-							},
-							"style": {
-								"labelkey": "PEC_ENT_FMT",
-								"labelvalue": 3,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.mag_ora.b,
-								"fillopacity": 0.8,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval > 3);
-							},
-							"style": {
-								"labelkey": "PEC_ENT_GT",
-								"fill": COLORRAMPS.RAMPS4X4.mag_ora.a,
-								"fillopacity": 0.8,
-								"linewidth": 1
-							}
-						}
-
-
-					]
-
-				}
-			},						
-			"label": {
-			},
-			"scalelimits": {
-				"top": 10000
-			}
-		},						
-		"pec_lot": {
-			"name": "Alv. loteamento em curso",
-			"visible": false,
-			"labelkey": "PEC_LOT",
-			"condstyle": {
-				"default": {
-					"strokecolor": "#ff5e32ff",  
-					"linewidth": 1,	
-					"fill": "rgba(204, 204, 204, 0.5)"
-				},
-				"perattribute": {
-					"cnt": [
-						{
-							"f": function(testval) {
-								return (testval == 1);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_FMT",
-								"labelvalue": 1,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.blue_mag.d,	
-								"fillopacity": 0.7,
-								"linewidth": 1
-							}
-						},
-						{
-							"f": function(testval) {
-								return (testval > 1);
-							},
-							"style": {
-								"labelkey": "PEC_ALV_FMT",
-								"labelvalue": 2,
-								"strokecolor": "#40a3a3",
-								"fill": COLORRAMPS.RAMPS4X4.blue_mag.a,
-								"linewidth": 1
+								"labelkey": "GAP",
+								"strokecolor": "#ffc44f",
+								"fill": "#00a8e680",
+								"linewidth": 3
 							}
 						}
 					]
-
 				}
 			},						
-			"label": {
-			},
 			"scalelimits": {
 				"top": 10000
-			}
-		},						
-		"pec_sru": {
+			}						
+		},	
+		"ALV_SRU": {
 			"name": "Alv. SRU em curso",
 			"visible": true,
-			"labelkey": "PEC_SRU",
+			"labelkey": "ALV_SRU",
 			"markerfunction": "sru_markers",	
 			"aoi": [ -41900.0, 163200.0, -39400.0, 164900.0 ],
 			"condstyle": {
@@ -306,7 +202,7 @@ var MAPCFG = {
 			"scalelimits": {
 				"top": 10000
 			}
-		},						
+		},			
 		"IMG16": {
 			"rasterbaseurl": "/img16",
 			"filterfunc": "toGrayScaleImgFilter"

@@ -89,45 +89,6 @@ var QueryMgr = {
 		
 };
 
-var LayervizMgr = {
-	mode: null,
-	layerItems: {},
-	set: function(p_key, p_value) {
-		this.layerItems[p_key] = p_value;
-	},
-	changeVisibilty(p_this_layerid, p_visible, opt_do_change) {
-		if (this.mode == 'radiobutton') {
-			for (let lyrId in this.layerItems) {
-				if (p_visible) {
-					if (lyrId != p_this_layerid && this.layerItems[lyrId].visible) {
-
-						this.layerItems[lyrId].visible = false;
-						this.layerItems[lyrId].panel.open = false;
-						this.layerItems[p_this_layerid].panel.open = true;
-
-						if (typeof LayerInteractionMgr != 'undefined') {
-							LayerInteractionMgr.select(p_this_layerid);
-						}
-					}
-				}
-			}
-		}
-		if (opt_do_change) {
-			this.layerItems[p_this_layerid].visible = p_visible;
-			this.layerItems[p_this_layerid].panel.open = p_visible;
-		}
-	},
-	init: function() {		
-		if (typeof LAYERVIZ_MODE != 'undefined') {
-			this.mode = LAYERVIZ_MODE;
-		}
-	}
-};
-
-(function() {
-	LayervizMgr.init();
-})();
-
 var RecordsViewMgr = {
 	panels: {},
 	init: function() {

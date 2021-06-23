@@ -2,14 +2,10 @@
 //  Configuração básica
 //  ----------------- ----------------------------------------------------------
 
-var LAYERVIZ_MODE = 'radiobutton'; // null ou 'radiobutton' -- visibilidade das FEATLAYERS é mutuamente exclusiva, ligar uma apaga  as outras
 
 var AJAX_ENDPOINTS = {
 	locqry: "https://loc.cm-porto.net/loc/c/lq",
 	spec_queries: "https://munisig.cm-porto.pt/riscobdt/doget"
-}
-
-var QUERIES_CFG = {
 }
 
 var RECORD_PANELS_CFG = {
