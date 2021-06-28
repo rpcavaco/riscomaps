@@ -91,6 +91,7 @@ var QueryMgr = {
 
 var RecordsViewMgr = {
 	panels: {},
+	the_divname: null,
 	init: function() {
 		let cfg;
 		for (let k in RECORD_PANELS_CFG) {
@@ -98,10 +99,10 @@ var RecordsViewMgr = {
 			if (cfg["type"] == 'switcher') {
 				this.panels[k] = new RecordPanelSwitcher(cfg["the_div"]);
 				this.panels[k].rotator_msg = cfg["rotator_msg"];
-				this.panels[k].rotator_msg = cfg["rotator_msg"];
 				this.panels[k].attr_cfg = cfg["attr_cfg"];
 			}
 		}
+		this.the_divname = cfg["the_div"];
 	},
 	_get: function(p_key) {
 		if (this.panels[p_key] === undefined) {
@@ -111,6 +112,10 @@ var RecordsViewMgr = {
 	},
 	clear: function(p_key) {
 		this._get(p_key).clear();
+		const wdg = document.getElementById(this.the_divname);
+		if (wdg!=null && wdg.parentNode!=null) {
+			wdg.parentNode.style.removeProperty("height");
+		}
 	},
 	_valcount: function(p_key, p_rows) {
 		let maxcnt=0, valcount;
@@ -118,6 +123,9 @@ var RecordsViewMgr = {
 		for (let i=0; i<p_rows.length; i++) {  
 			valcount = 0;
 			for (let fld in attr_cfg) {
+				if (!attr_cfg.hasOwnProperty(fld)) {
+					continue;
+				}
 				let preval = p_rows[i][fld];
 				if (preval == null || preval.length==0) {
 					continue;

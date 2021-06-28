@@ -64,13 +64,6 @@ var MapsMgr = {
 
 	//** Config **
 	MapsMgr.addMap("main", 'viewDiv', MAPCFG);
-	/* let ac = AutocompleteObjMgr.get("geocode");
-	ac.setMap(map);
-	// raio para fazer fit a circulo em volta de local seleccionado, quando não existe retângulo da área seleccionada.
-	ac.setZoomRadius(120);
-	InteractionMgr.addMap(map);
-	QueryMgr.addMap(map);
-*/
 
 	MapsMgr.registerOnDrawFinish("main", "default_drawfinish",
 		function (the_mctrl, p_item) {
