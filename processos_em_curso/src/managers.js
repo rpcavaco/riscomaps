@@ -208,102 +208,6 @@ var InteractionMgr = {
 	init: function() {		
 		(function(p_this) {
 
-
-			/*
-			
-			p_this.mousechange = function(p_map, x, y, layernames, findings, is_transient) {
-
-				if (is_transient) {					
-					if (AutocompleteObjMgr.recordsAreaIsVisible(p_this.connected_autocomplete)) {
-						return;
-					}
-					dlayer = 'transient';
-					p_map.clearTransient();
-				} else {
-					dlayer = 'temporary';
-					p_map.clearTemporary();
-					p_map.unregisterOnDrawFinish("highlighttopo");
-
-					p_this.selection.lyr = null;
-					p_this.selection.oid = null;
-					p_this.selection.env = null;
-
-					AutocompleteObjMgr.showRecordsArea(p_this.connected_autocomplete, false);
-				}
-				
-				let feat, sty, lyr, oid, styles, qrykey, info_fields, info_values = [];
-				if (Object.keys(findings).length > 0 && layernames.length > 0) {
-								
-					for (let i=0; i<layernames.length; i++) {
-						
-						lyr = layernames[i];
-
-						oid = findings[lyr][0];
-						if (oid == null) {
-							continue;
-						}
-
-						feat = p_map.getFeature(lyr, oid);
-						if (feat) {
-							if (feat._styidx !== undefined) {
-								if (!p_map.style_visibility.isLyrTOCStyleVisibile(feat._styidx)) {
-									continue;
-								}
-							}
-						}
-						
-						if (p_this.highlightStyles.hasOwnProperty(lyr)) {
-							styles = p_this.highlightStyles[lyr];
-						} else if (p_this.highlightStyles.hasOwnProperty("ALL")) {
-							styles = p_this.highlightStyles["ALL"];
-						} else {
-							console.warn("highlightStyles has no config for layer '"+lyr+"' or ALL.");
-							continue;
-						}
-						
-						if (is_transient) {                  
-							sty = styles.transient;
-						} else {							
-							sty = styles.temporary;
-							p_this.infoQuery(lyr, feat);
-						}
-
-						p_map.drawSingleFeature(lyr, oid, inscreenspace, dlayer, sty, false, null, false);
-
-						if (!is_transient) {
-
-							p_this.selection.lyr = lyr;
-							p_this.selection.oid = oid;
-							
-							// redesenhar sempre que houver refresh, enquanto a selecção se mantiver
-							p_map.registerOnDrawFinish("highlight_features",
-								function (the_mapctrl, p_item) {
-									if (p_item != 'normal') {
-										return;
-									}
-									the_mapctrl.drawSingleFeature(p_this.selection.lyr, p_this.selection.oid, inscreenspace, dlayer, sty, false, null, false);
-								},
-								false // opt_noclobber
-							);	
-						}
-						
-						
-						// uma só layer
-						break;
-					}
-					
-				}
-				
-				// se nada for encontrado
-				if (!is_transient && p_this.selection.oid == null) {
-					p_map.unregisterOnDrawFinish("highlight_features");
-				}
-
-				
-			};
-
-			*/
-
 			p_this.mouseup = function(p_map, x, y, layernames, findings) {
 				p_this.onBeforeMouseUp(p_map, x, y, layernames, findings);
 				p_this.onMouseChange(p_map, x, y, layernames, findings, false);
@@ -322,20 +226,6 @@ var InteractionMgr = {
 (function() {
 	InteractionMgr.init();
 })();
-
-
-/*	if (!AutocompleteObjMgr.recordsAreaIsVisible('geocode')) {	
-		var oid = p_map.findNearestObject(x, y, layername);
-		if (oid && layername == tema_lotes) {
-			//console.log("hl oid:"+oid);
-			LoteGOUHighlighter.doHighlight(oid, false);
-		} else {
-			if (LoteGOUHighlighter.tempHighlightIsOn()) {
-				MAPCTRL.clearTransient();
-			}
-		}
-	}
-	*/
 
 
 		

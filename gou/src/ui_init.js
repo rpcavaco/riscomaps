@@ -542,7 +542,32 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 		this.mapctrl = null;
 		this.zoom_radius = 1.0;
 	}
-	
+
+	//** Config ** inclui config
+	altQueriesHandler(p_trimmed_qrystr) {
+		
+		const notTopoRegEx = new RegExp("(nud|nup|p|alv|\\d+)\/", 'i');
+		const nupRegEx = new RegExp("^(nud|nup|p)\/\\d{3,8}\/\\d{2,4}", 'i');
+		const alvCMPEx = new RegExp("^alv\/\\d{1,8}\/\\d{2,4}\/(dmu|cmp)", 'i');
+		const alvSRUEx = new RegExp("^\\d{3,8}\/\\d{2,4}\/sru", 'i');
+
+		const pt_buffer_dist = 50;
+
+		if (notTopoRegEx.test(p_trimmed_qrystr)) {
+			this.emptyCurrentRecords();
+			if (nupRegEx.test(p_trimmed_qrystr)) {
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
+			} else if (alvCMPEx.test(p_trimmed_qrystr)) {
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
+			} else if (alvSRUEx.test(p_trimmed_qrystr)) {
+				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
+			}
+			return false;
+			
+		}
+		return true;		
+	}
+
 	setMap(p_mapctrl) {
 		this.mapctrl = p_mapctrl;
 	}
@@ -587,31 +612,6 @@ class Geocode_LocAutoCompleter extends LocAutoCompleter {
 				the_map.clearTemporary();
 			}
         }
-	}
-
-//** Config ** inclui config
-	altQueriesHandler(p_trimmed_qrystr) {
-	
-		const notTopoRegEx = new RegExp("(nud|nup|p|alv|\\d+)\/", 'i');
-		const nupRegEx = new RegExp("^(nud|nup|p)\/\\d{3,8}\/\\d{2,4}", 'i');
-		const alvCMPEx = new RegExp("^alv\/\\d{1,8}\/\\d{2,4}\/(dmu|cmp)", 'i');
-		const alvSRUEx = new RegExp("^\\d{3,8}\/\\d{2,4}\/sru", 'i');
-
-		const pt_buffer_dist = 50;
-
-		if (notTopoRegEx.test(p_trimmed_qrystr)) {
-			this.emptyCurrentRecords();
-			if (nupRegEx.test(p_trimmed_qrystr)) {
-				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
-			} else if (alvCMPEx.test(p_trimmed_qrystr)) {
-				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
-			} else if (alvSRUEx.test(p_trimmed_qrystr)) {
-				QueryMgr.execute("pec_findbydoc_qry", [ p_trimmed_qrystr ], pt_buffer_dist);
-			}
-			return false;
-			
-		}
-		return true;		
 	}
 
 	zoomToAddr(p_env, hl_codtopo, hl_npol, marker_coords) {

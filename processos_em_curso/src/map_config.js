@@ -68,7 +68,7 @@ var MAPCFG = {
 			}
 		}
 	},
-	"baseurl": "https://munisig.cm-porto.pt/riscobdtdev",
+	"baseurl": "https://munisig.cm-porto.pt/riscobdt",
 	"baseraster": "DGT_2018",
 	"lnames": ["pec_naolot", "pec_entrada", "pec_lot", "pec_sru", "EV","NPOLPROJ"],
 	"rasternames": [],
@@ -313,6 +313,10 @@ var MAPCFG = {
 		},	
 		"DGT_2018": {
 			"rasterbaseurl": "/orto2018",
+			"filterfunc": "toGrayScaleImgFilter"
+		},	
+		"IMG2020": {
+			"rasterbaseurl": "/img2020",
 			"filterfunc": "toGrayScaleImgFilter"
 		},	
 		"NPOLPROJ": {

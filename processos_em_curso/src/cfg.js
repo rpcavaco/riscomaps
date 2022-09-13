@@ -4,7 +4,7 @@
 
 var AJAX_ENDPOINTS = {
 	locqry: "https://loc.cm-porto.net/loc/c/lq",
-	spec_queries: "https://munisig.cm-porto.pt/riscobdtdev/doget"
+	spec_queries: "https://munisig.cm-porto.pt/riscobdt/doget"
 }
 
 var RECORD_PANELS_CFG = {
@@ -31,13 +31,7 @@ var RECORD_PANELS_CFG = {
 			num_conservatoria:  ["Registo predial", null],
 			freguesia: ["Freguesia", null],
 			data_despacho:  ["Data despacho", null],
-
 			
-			/* data_entrada:  ["Data entrada", 'epoch'], 
-			aprov_arq_despacho:  ["Despacho aprovação arq.ª", null],
-			aprov_arq_data_despacho:  ["Data despacho aprov.arq.ª", 'epoch'],
-			entrada:  ["Em 'entrada'", null], */
-
 			att:  ["Área do prédio a lotear (m2)", 'localized'],
 			n_lotes:  ["Número de lotes", null],
 			atc:  ["Área total construção (m2)", 'localized'],
@@ -49,8 +43,6 @@ var RECORD_PANELS_CFG = {
 			cercea:  ["Cércea",  'localized'],
 			pisos_abaixo_csol:  ["Pisos abaixo cot.soleira",  null],
 			pisos_acima_csol:  ["Pisos acima cot.soleira", null],
-
-
 
 			total:  ["Número total de fogos", 'localized'],
 			atimpl:  ["Área implantação (m2)", 'localized'],

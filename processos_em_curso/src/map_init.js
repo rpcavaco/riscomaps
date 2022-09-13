@@ -3,9 +3,9 @@ var MapsMgr = {
 	
 	//*** CONFIG ***
 	general_logging_on: false,
-	calls_sequence_logging_on: true,
-	layer_notviz_image_params: ["media/not_viz_grey.png", 10, 0],
-	hlLayer: "NPOLPROJ",
+	calls_sequence_logging_on: false,
+	layer_notviz_image_params: ["media/not_viz_grey.png", 10, 0], // icon de 'layer não visível': ficheiro, coord x, coord y; coords relativas ao elemento em que se inserem
+	npol_setas_tema_orientacao: "NPOLPROJ", // camada cujos elementos lineares dão orientação para as etiquetas de num.polícia (com seta)
 	
 	maps: {},
 	active: null,
@@ -136,7 +136,7 @@ var MapsMgr = {
 				let HC_ret=[];
 				
 				// TODO - para que serve ? 
-				if (p_layername == MapsMgr.hlLayer) 
+				if (p_layername == MapsMgr.npol_setas_tema_orientacao) 
 				{
 					if (storedfeatdata.path_levels > 1) {
 						throw new Error("valor de path_levels inesperado ("+storedfeatdata.path_levels+") para NPOLPROJD no evento onDrwaing_FeatureTransform");

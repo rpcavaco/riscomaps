@@ -208,11 +208,11 @@ QueryMgr.customizedExec = function(p_qrykey, p_jsonresponse, opt_adic_callback) 
 	let rows;
 
 	const keys = {
-		"pec_findbydoc_qry": [null,"bydocqry"],
+		"pec_findbydoc_qry": [null,null],
 		"pec_naolot_info": ["pec_naolot_codsig", "main_naolot_info"],
 		"pec_entrada_info": ["pec_entrada_codsig", "main_entrada_info"],
 		"pec_lot_info": ["pec_lot_codsig", "main_lot_info"],
-		"pec_sru_info": ["pec_sru_codsig", "main_sru_info"],
+		"pec_sru_info": ["pec_sru_codsig", "main_sru_info"]
 	};
 
 	if (keys[p_qrykey] !== undefined) {
